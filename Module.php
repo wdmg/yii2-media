@@ -75,7 +75,7 @@ class Module extends BaseModule
         $items = [
             'label' => $this->name,
             'url' => [$this->routePrefix . '/'. $this->id],
-            'icon' => 'fa-folder',
+            'icon' => 'fa fa-fw fa-folder',
             'active' => in_array(\Yii::$app->controller->module->id, [$this->id])
         ];
         return $items;
