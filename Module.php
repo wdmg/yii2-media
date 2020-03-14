@@ -6,7 +6,7 @@ namespace wdmg\media;
  * Yii2 Media library
  *
  * @category        Module
- * @version         0.0.1
+ * @version         0.0.2
  * @author          Alexsander Vyshnyvetskyy <alex.vyshnyvetskyy@gmail.com>
  * @link            https://github.com/wdmg/yii2-media
  * @copyright       Copyright (c) 2019 - 2020 W.D.M.Group, Ukraine
@@ -30,7 +30,7 @@ class Module extends BaseModule
     /**
      * {@inheritdoc}
      */
-    public $defaultRoute = "media/index";
+    public $defaultRoute = "list/index";
 
     /**
      * @var string, the name of module
@@ -43,9 +43,20 @@ class Module extends BaseModule
     public $description = "Media library";
 
     /**
+     * @var string the default routes to render media (use "/" - for root)
+     */
+    public $mediaRoute = "/media";
+    public $mediaCategoriesRoute = "/media/categories";
+
+    /**
+     * @var string, the default path to save media files in @webroot
+     */
+    public $mediaPath= "/uploads/media";
+
+    /**
      * @var string the module version
      */
-    private $version = "0.0.1";
+    private $version = "0.0.2";
 
     /**
      * @var integer, priority of initialization
@@ -75,7 +86,7 @@ class Module extends BaseModule
         $items = [
             'label' => $this->name,
             'url' => [$this->routePrefix . '/'. $this->id],
-            'icon' => 'fa fa-fw fa-folder',
+            'icon' => 'fa fa-fw fa-icons',
             'active' => in_array(\Yii::$app->controller->module->id, [$this->id])
         ];
         return $items;

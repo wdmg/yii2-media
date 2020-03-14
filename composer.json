@@ -1,10 +1,10 @@
 {
   "name": "wdmg/yii2-media",
   "description": "Media library",
-  "keywords": ["yii2", "yii2-media", "media", "manager", "wdmg"],
+  "keywords": ["yii2", "yii2-media", "media", "library", "manager", "wdmg"],
   "type": "yii2-extension",
   "license": "MIT",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "homepage": "https://github.com/wdmg/yii2-media",
   "support": {
     "source": "https://github.com/wdmg/yii2-media",
@@ -22,7 +22,7 @@
   ],
   "require": {
     "yiisoft/yii2": "^2.0.20",
-    "wdmg/yii2-base": "^1.1.4"
+    "wdmg/yii2-base": "^1.1.2"
   },
   "minimum-stability": "dev",
   "autoload": {
