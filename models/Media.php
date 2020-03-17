@@ -43,7 +43,7 @@ class Media extends ActiveRecord
     const MEDIA_STATUS_DRAFT = 0; // Media has draft
     const MEDIA_STATUS_PUBLISHED = 1; // Media has been published
 
-    public $file;
+    public $files;
     public $url;
 
     /**
@@ -93,13 +93,13 @@ class Media extends ActiveRecord
     public function rules()
     {
         $rules = [
-            [['name', 'alias', 'content'], 'required'],
+            [['name', 'alias', 'cat_id', 'path'], 'required'],
             [['name', 'alias', 'mime_type'], 'string', 'min' => 3, 'max' => 128],
             [['path', 'title', 'alt', 'reference'], 'string', 'max' => 255],
             [['caption'], 'string', 'max' => 550],
             [['description'], 'string'],
             [['cat_id', 'size'], 'integer'],
-            [['file'], 'file', 'skipOnEmpty' => true, 'maxFiles' => 1, 'extensions' => 'png, jpg'],
+            [['files'], 'file', 'skipOnEmpty' => true, 'maxFiles' => 10, 'extensions' => 'png, jpg'],
             [['params'], JsonValidator::class, 'message' => Yii::t('app/modules/media', 'The value of field `{attribute}` must be a valid JSON, error: {error}.')],
             [['status'], 'boolean'],
             ['alias', 'unique', 'message' => Yii::t('app/modules/media', 'Param attribute must be unique.')],
@@ -124,6 +124,7 @@ class Media extends ActiveRecord
             'cat_id' => Yii::t('app/modules/media', 'Category ID'),
             'name' => Yii::t('app/modules/media', 'Name'),
             'alias' => Yii::t('app/modules/media', 'Alias'),
+            'files' => Yii::t('app/modules/media', 'Files'),
             'path' => Yii::t('app/modules/media', 'File path'),
             'size' => Yii::t('app/modules/media', 'File size'),
             'title' => Yii::t('app/modules/media', 'Title'),
@@ -159,6 +160,9 @@ class Media extends ActiveRecord
 
     public function beforeValidate()
     {
+        if (is_null($this->cat_id))
+            $this->cat_id = Categories::DEFAULT_CATEGORY_ID;
+
         if (is_string($this->params) && JsonValidator::isValid($this->params)) {
             $this->params = \yii\helpers\Json::decode($this->params);
         } elseif (is_array($this->params)) {
@@ -230,23 +234,50 @@ class Media extends ActiveRecord
             return $this->updated_by;
     }
 
+    /**
+     * @param null $file
+     * @return bool|string
+     * @throws \yii\base\Exception
+     */
     public function upload($file = null)
     {
         if (!$file)
             return false;
 
-        $path = Yii::getAlias('@webroot') . $this->getMediaPath();
-        if ($file) {
-            // Create the folder if not exist
-            if (\yii\helpers\FileHelper::createDirectory($path, $mode = 0775, $recursive = true)) {
-                $fileName = $file->baseName . '.' . $file->extension;
-                if ($file->saveAs($path . '/' . $fileName)) {
-                    $this->path = $fileName;
-                    $this->mime_type = $file->mimeType;
-                    return $fileName;
+        // Get base path for storage media
+        $basepath = Yii::getAlias('@webroot') . $this->getMediaPath();
+        $path = $this->getMediaPath();
+
+        // Create the folder if not exist
+        if (\yii\helpers\FileHelper::createDirectory($basepath, $mode = 0775, $recursive = true)) {
+
+            // Generate full path with year and month
+            $savepath = $basepath . "/" . date('Y') . "/" . date('m');
+            $fullpath = $path . "/" . date('Y') . "/" . date('m');
+
+            if (\yii\helpers\FileHelper::createDirectory($savepath, $mode = 0775, $recursive = true)) {
+
+                // Generate filename of media
+                $filename = $file->baseName . "." . $file->extension;
+                $savepath = $savepath . "/" . $filename;
+                $filepath = $fullpath . "/" . $filename;
+
+                if ($file->saveAs($savepath)) {
+
+                    $this->path = $filepath;
+                    $this->mime_type = $file->type;
+
+                    /*$media->params = Json::encode([
+                        'type' => $file->type,
+                        'extension' => $file->extension,
+                        'size' => $file->size
+                    ]);*/
+
+                    return $filename;
                 }
             }
         }
+
         return false;
     }
 

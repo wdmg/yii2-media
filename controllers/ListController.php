@@ -4,10 +4,16 @@ namespace wdmg\media\controllers;
 
 use Yii;
 use yii\db\ActiveRecord;
+use yii\helpers\FileHelper;
+use yii\helpers\Json;
 use yii\web\Controller;
+use yii\web\UploadedFile;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use wdmg\media\models\Media;
+use wdmg\media\models\MediaSearch;
+use wdmg\media\models\Categories;
 
 /**
  * ListController implements the CRUD actions for Media model.
@@ -65,6 +71,48 @@ class ListController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $model = new Media();
+        $searchModel = new MediaSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+            'module' => $this->module,
+            'model' => $model
+        ]);
+    }
+
+
+    public function actionUpload()
+    {
+        $model = new Media();
+        if (Yii::$app->request->isPost) {
+
+            $files = UploadedFile::getInstances($model, 'files');
+            if (is_array($files)) {
+                foreach ($files as $file) {
+                    if ($file->error == 0) {
+
+                        $media = new Media();
+                        if (is_null($media->name))
+                            $media->name = $file->name;
+
+                        if (is_null($media->cat_id))
+                            $media->cat_id = Categories::DEFAULT_CATEGORY_ID;
+
+                        if ($media->upload($file)) {
+                            $media->save();
+                        }
+                    }
+                }
+            }
+        } else {
+            return $this->render('upload', [
+                'model' => $model,
+            ]);
+        }
+
+        return $this->redirect(['list/index']);
     }
 }

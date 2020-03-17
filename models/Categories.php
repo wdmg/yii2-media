@@ -34,6 +34,8 @@ class Categories extends ActiveRecord
     public $route;
     public $url;
 
+    const DEFAULT_CATEGORY_ID = 1;
+
     /**
      * {@inheritdoc}
      */
@@ -132,7 +134,8 @@ class Categories extends ActiveRecord
 
     public function beforeDelete()
     {
-        if ($data->id === 1) // Category for uncategorized posts (undeleted).
+        // Category for uncategorized posts has undeleted
+        if ($data->id === self::DEFAULT_CATEGORY_ID)
             return false;
 
         return parent::beforeDelete();

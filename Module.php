@@ -76,6 +76,13 @@ class Module extends BaseModule
         // Set priority of current module
         $this->setPriority($this->priority);
 
+
+        // Process and normalize route for media in frontend
+        $this->mediaRoute = self::normalizeRoute($this->mediaRoute);
+        $this->mediaCategoriesRoute = self::normalizeRoute($this->mediaCategoriesRoute);
+
+        // Normalize path for media folder
+        $this->mediaPath = \yii\helpers\FileHelper::normalizePath($this->mediaPath);
     }
 
     /**
@@ -87,7 +94,19 @@ class Module extends BaseModule
             'label' => $this->name,
             'url' => [$this->routePrefix . '/'. $this->id],
             'icon' => 'fa fa-fw fa-icons',
-            'active' => in_array(\Yii::$app->controller->module->id, [$this->id])
+            'active' => in_array(\Yii::$app->controller->module->id, [$this->id]),
+            'items' => [
+                [
+                    'label' => Yii::t('app/modules/media', 'Media list'),
+                    'url' => [$this->routePrefix . '/media/list/'],
+                    'active' => (in_array(\Yii::$app->controller->module->id, ['content']) &&  Yii::$app->controller->id == 'list'),
+                ],
+                [
+                    'label' => Yii::t('app/modules/media', 'Categories'),
+                    'url' => [$this->routePrefix . '/media/cats/'],
+                    'active' => (in_array(\Yii::$app->controller->module->id, ['content']) &&  Yii::$app->controller->id == 'cats'),
+                ]
+            ]
         ];
         return $items;
     }
@@ -98,5 +117,32 @@ class Module extends BaseModule
     public function bootstrap($app)
     {
         parent::bootstrap($app);
+    }
+
+
+    /**
+     * {@inheritdoc}
+     */
+    public function install()
+    {
+        parent::install();
+        $path = Yii::getAlias('@webroot') . $this->mediaPath;
+        if (\yii\helpers\FileHelper::createDirectory($path, $mode = 0775, $recursive = true))
+            return true;
+        else
+            return false;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function uninstall()
+    {
+        parent::uninstall();
+        $path = Yii::getAlias('@webroot') . $this->mediaPath;
+        if (\yii\helpers\FileHelper::removeDirectory($path))
+            return true;
+        else
+            return false;
     }
 }
