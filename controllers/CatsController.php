@@ -77,6 +77,134 @@ class CatsController extends Controller
         ]);
     }
 
+
+    /**
+     * Creates a new media Category model.
+     * If creation is successful, the browser will be redirected to the list of categories.
+     * @return mixed
+     */
+    public function actionCreate()
+    {
+        $model = new Categories();
+
+        if (Yii::$app->request->isAjax) {
+            if ($model->load(Yii::$app->request->post())) {
+                if ($model->validate())
+                    $success = true;
+                else
+                    $success = false;
+
+                return $this->asJson(['success' => $success, 'alias' => $model->alias, 'errors' => $model->errors]);
+            }
+        } else {
+            if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+
+                if ($model->save())
+                    Yii::$app->getSession()->setFlash(
+                        'success',
+                        Yii::t('app/modules/media', 'Category has been successfully added!')
+                    );
+                else
+                    Yii::$app->getSession()->setFlash(
+                        'danger',
+                        Yii::t('app/modules/media', 'An error occurred while add the new category.')
+                    );
+
+                return $this->redirect(['index']);
+            }
+        }
+
+        return $this->render('create', [
+            'module' => $this->module,
+            'model' => $model
+        ]);
+
+    }
+
+    /**
+     * Updates an existing Category model.
+     * If update is successful, the browser will be redirected to the categories list.
+     * @param integer $id
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionUpdate($id)
+    {
+        $model = $this->findModel($id);
+
+        // Get current URL before save this category
+        $oldCategoryUrl = $model->getCategoryUrl(false);
+
+        if (Yii::$app->request->isAjax) {
+            if ($model->load(Yii::$app->request->post())) {
+                if ($model->validate())
+                    $success = true;
+                else
+                    $success = false;
+
+                return $this->asJson(['success' => $success, 'alias' => $model->alias, 'errors' => $model->errors]);
+            }
+        } else {
+            if ($model->load(Yii::$app->request->post())) {
+
+                // Get new URL for saved category
+                $newCategoryUrl = $model->getCategoryUrl(false);
+
+                if ($model->save()) {
+
+                    // Set 301-redirect from old URL to new
+                    if (isset(Yii::$app->redirects) && ($oldCategoryUrl !== $newCategoryUrl)) {
+                        // @TODO: remove old redirects
+                        Yii::$app->redirects->set('blog', $oldCategoryUrl, $newCategoryUrl, 301);
+                    }
+
+                    Yii::$app->getSession()->setFlash(
+                        'success',
+                        Yii::t(
+                            'app/modules/blog',
+                            'OK! Category `{name}` successfully updated.',
+                            [
+                                'name' => $model->name
+                            ]
+                        )
+                    );
+                } else {
+                    Yii::$app->getSession()->setFlash(
+                        'danger',
+                        Yii::t(
+                            'app/modules/blog',
+                            'An error occurred while update a category `{name}`.',
+                            [
+                                'name' => $model->name
+                            ]
+                        )
+                    );
+                }
+                return $this->redirect(['index']);
+            }
+        }
+
+        return $this->render('update', [
+            'module' => $this->module,
+            'model' => $model
+        ]);
+    }
+
+    /**
+     * Displays a single Category model.
+     * @param integer $id
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionView($id)
+    {
+        $model = $this->findModel($id);
+        return $this->render('view', [
+            'module' => $this->module,
+            'model' => $model
+        ]);
+    }
+
     /**
      * Deletes an existing Category.
      * If deletion is successful, the browser will be redirected to the categories list.

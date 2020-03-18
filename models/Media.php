@@ -45,6 +45,19 @@ class Media extends ActiveRecord
 
     public $files;
     public $url;
+    private $module;
+
+    public function init()
+    {
+        parent::init();
+        if (!$this->module = Yii::$app->getModule('admin/media'))
+            $this->module = Yii::$app->getModule('media');
+
+        /*var_dump($this->module->getAllowedMime());
+        var_dump($this->module->getAllowedExtensions(false));
+        die();*/
+
+    }
 
     /**
      * {@inheritdoc}
@@ -98,8 +111,9 @@ class Media extends ActiveRecord
             [['path', 'title', 'alt', 'reference'], 'string', 'max' => 255],
             [['caption'], 'string', 'max' => 550],
             [['description'], 'string'],
+            [['mime_type'], 'in', 'range' => $this->module->getAllowedMime()],
             [['cat_id', 'size'], 'integer'],
-            [['files'], 'file', 'skipOnEmpty' => true, 'maxFiles' => 10, 'extensions' => 'png, jpg'],
+            [['files'], 'file', 'skipOnEmpty' => true, 'maxFiles' => $this->module->maxFilesToUpload, 'extensions' => $this->module->getAllowedExtensions(false), 'checkExtensionByMimeType' => false],
             [['params'], JsonValidator::class, 'message' => Yii::t('app/modules/media', 'The value of field `{attribute}` must be a valid JSON, error: {error}.')],
             [['status'], 'boolean'],
             ['alias', 'unique', 'message' => Yii::t('app/modules/media', 'Param attribute must be unique.')],
@@ -232,53 +246,6 @@ class Media extends ActiveRecord
             return $this->hasOne(\wdmg\users\models\Users::class, ['id' => 'updated_by']);
         else
             return $this->updated_by;
-    }
-
-    /**
-     * @param null $file
-     * @return bool|string
-     * @throws \yii\base\Exception
-     */
-    public function upload($file = null)
-    {
-        if (!$file)
-            return false;
-
-        // Get base path for storage media
-        $basepath = Yii::getAlias('@webroot') . $this->getMediaPath();
-        $path = $this->getMediaPath();
-
-        // Create the folder if not exist
-        if (\yii\helpers\FileHelper::createDirectory($basepath, $mode = 0775, $recursive = true)) {
-
-            // Generate full path with year and month
-            $savepath = $basepath . "/" . date('Y') . "/" . date('m');
-            $fullpath = $path . "/" . date('Y') . "/" . date('m');
-
-            if (\yii\helpers\FileHelper::createDirectory($savepath, $mode = 0775, $recursive = true)) {
-
-                // Generate filename of media
-                $filename = $file->baseName . "." . $file->extension;
-                $savepath = $savepath . "/" . $filename;
-                $filepath = $fullpath . "/" . $filename;
-
-                if ($file->saveAs($savepath)) {
-
-                    $this->path = $filepath;
-                    $this->mime_type = $file->type;
-
-                    /*$media->params = Json::encode([
-                        'type' => $file->type,
-                        'extension' => $file->extension,
-                        'size' => $file->size
-                    ]);*/
-
-                    return $filename;
-                }
-            }
-        }
-
-        return false;
     }
 
     /**
@@ -459,6 +426,63 @@ class Media extends ActiveRecord
         }
 
         return $list;
+    }
+
+    /**
+     * @param null $file
+     * @return bool|string
+     * @throws \yii\base\Exception
+     */
+    public function upload($file = null)
+    {
+        if (!$file)
+            return false;
+
+        // Get base path for storage media
+        $basepath = Yii::getAlias('@webroot') . $this->getMediaPath();
+        $path = $this->getMediaPath();
+
+        // Create the folder if not exist
+        if (\yii\helpers\FileHelper::createDirectory($basepath, $mode = 0775, $recursive = true)) {
+
+            // Generate full path with year and month
+            $savepath = $basepath . "/" . date('Y') . "/" . date('m');
+            $fullpath = $path . "/" . date('Y') . "/" . date('m');
+
+            if (\yii\helpers\FileHelper::createDirectory($savepath, $mode = 0775, $recursive = true)) {
+
+                // Generate filename of media
+                $filename = $file->baseName . "." . $file->extension;
+                $savepath = $savepath . "/" . $filename;
+                $filepath = $fullpath . "/" . $filename;
+
+                if ($file->saveAs($savepath)) {
+
+                    $this->path = $filepath;
+                    $this->mime_type = $file->type;
+
+                    /*$media->params = Json::encode([
+                        'type' => $file->type,
+                        'extension' => $file->extension,
+                        'size' => $file->size
+                    ]);*/
+
+                    return $filename;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public function delete()
+    {
+        $filename = Yii::getAlias('@webroot') . $this->path;
+        if (!(parent::delete() === false)) {
+            if (file_exists($filename))
+                return @unlink($filename);
+        }
+        return false;
     }
 
 }

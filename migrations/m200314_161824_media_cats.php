@@ -68,6 +68,7 @@ class m200314_161824_media_cats extends Migration
 
         $this->insert('{{%media_cats}}', [
             'id' => 1,
+            'parent_id' => 0,
             'name' => 'Uncategorized',
             'alias' => 'uncategorized',
             'title' => 'Uncategorized media'

@@ -135,8 +135,11 @@ class Categories extends ActiveRecord
     public function beforeDelete()
     {
         // Category for uncategorized posts has undeleted
-        if ($data->id === self::DEFAULT_CATEGORY_ID)
+        if ($this->id === self::DEFAULT_CATEGORY_ID)
             return false;
+
+        // Set default uncategorized category for media items
+        Media::updateAll(['status' => Media::MEDIA_STATUS_DRAFT, 'cat_id' => self::DEFAULT_CATEGORY_ID], ['cat_id' => $this->id]);
 
         return parent::beforeDelete();
     }
@@ -182,40 +185,6 @@ class Categories extends ActiveRecord
             return $models->all();
 
     }
-
-    /**
-     * @param bool $allLabel
-     * @param bool $rootLabel
-     * @return array
-     */
-    /*public function getParentsList($allLabel = true, $rootLabel = false)
-    {
-
-        if ($this->id) {
-            $subQuery = self::find()->select('id')->where(['parent_id' => $this->id]);
-            $query = self::find()->alias('categories')
-                ->where(['not in', 'categories.parent_id', $subQuery])
-                ->andWhere(['!=', 'categories.parent_id', $this->id])
-                ->orWhere(['IS', 'categories.parent_id', null])
-                ->andWhere(['!=', 'categories.id', $this->id])
-                ->select(['id', 'name']);
-
-            $pages = $query->asArray()->all();
-        } else {
-            $pages = self::find()->select(['id', 'name'])->asArray()->all();
-        }
-
-        if ($allLabel)
-            return ArrayHelper::merge([
-                '*' => Yii::t('app/modules/media', '-- All categories --')
-            ], ArrayHelper::map($pages, 'id', 'name'));
-        elseif ($rootLabel)
-            return ArrayHelper::merge([
-                0 => Yii::t('app/modules/media', '-- Root category --')
-            ], ArrayHelper::map($pages, 'id', 'name'));
-        else
-            return ArrayHelper::map($pages, 'id', 'name');
-    }*/
 
     /**
      * Return the public route for categories URL
@@ -273,24 +242,57 @@ class Categories extends ActiveRecord
         return $this->url;
     }
 
+
+    /**
+     * @param bool $allLabel
+     * @param bool $rootLabel
+     * @return array
+     */
+    public function getParentsList($allLabel = true, $rootLabel = false)
+    {
+
+        if ($this->id) {
+            $subQuery = self::find()->select('id')->where(['parent_id' => $this->id]);
+            $query = self::find()->alias('categories')
+                ->where(['not in', 'categories.parent_id', $subQuery])
+                ->andWhere(['!=', 'categories.parent_id', $this->id])
+                ->orWhere(['IS', 'categories.parent_id', null])
+                ->andWhere(['!=', 'categories.id', $this->id])
+                ->select(['id', 'name']);
+
+            $list = $query->asArray()->all();
+        } else {
+            $list = self::find()->select(['id', 'name'])->asArray()->all();
+        }
+
+        if ($allLabel)
+            return ArrayHelper::merge([
+                '*' => Yii::t('app/modules/media', '-- All categories --')
+            ], ArrayHelper::map($list, 'id', 'name'));
+        elseif ($rootLabel)
+            return ArrayHelper::merge([
+                0 => Yii::t('app/modules/media', '-- Root category --')
+            ], ArrayHelper::map($list, 'id', 'name'));
+        else
+            return ArrayHelper::map($list, 'id', 'name');
+    }
+
+
     /**
      * @return object of \yii\db\ActiveQuery
      */
-    /*public function getPosts($cat_id = null, $asArray = false) {
+    public function getMedia($cat_id = null, $asArray = false) {
 
         if (!($cat_id === false) && !is_integer($cat_id) && !is_string($cat_id))
             $cat_id = $this->id;
 
-        $query = Posts::find()->alias('media')
-            ->select(['media.id', 'media.name', 'media.alias', 'media.content', 'media.title', 'media.description', 'media.keywords'])
-            ->leftJoin(['taxonomy' => Taxonomy::tableName()], '`taxonomy`.`post_id` = `media`.`id`')
-            ->where([
-                'taxonomy.type' => Posts::TAXONOMY_CATEGORIES,
-            ]);
+        $query = Media::find()->alias('media')
+            ->select(['media.id', 'media.name', 'media.alias', 'media.mime_type', 'media.title', 'media.description'])
+            ->leftJoin(['categories' => self::tableName()], '`media`.`cat_id` = `categories`.`id`');
 
         if (is_integer($cat_id))
             $query->andWhere([
-                'taxonomy.taxonomy_id' => intval($cat_id)
+                'categories.id' => intval($cat_id)
             ]);
 
         if ($asArray)
@@ -298,5 +300,5 @@ class Categories extends ActiveRecord
         else
             return $query->all();
 
-    }*/
+    }
 }

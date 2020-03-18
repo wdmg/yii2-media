@@ -69,8 +69,10 @@ class MediaSearch extends Media
             ->andFilterWhere(['like', 'caption', $this->caption])
             ->andFilterWhere(['like', 'alt', $this->alt])
             ->andFilterWhere(['like', 'description', $this->description])
-            ->andFilterWhere(['like', 'mime_type', $this->mime_type])
             ->andFilterWhere(['like', 'reference', $this->reference]);
+
+        if ($this->mime_type !== "*")
+            $query->andFilterWhere(['like', 'mime_type', $this->mime_type]);
 
         if ($this->size !== "*")
             $query->andFilterWhere(['like', 'size', $this->size]);

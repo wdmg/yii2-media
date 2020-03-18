@@ -101,8 +101,12 @@ class ListController extends Controller
                         if (is_null($media->cat_id))
                             $media->cat_id = Categories::DEFAULT_CATEGORY_ID;
 
-                        if ($media->upload($file)) {
-                            $media->save();
+                        if ($media->load(Yii::$app->request->post()) && $media->upload($file)) {
+                            if ($media->validate()) {
+                                $media->save();
+                            }/* else {
+
+                            }*/
                         }
                     }
                 }
@@ -114,5 +118,62 @@ class ListController extends Controller
         }
 
         return $this->redirect(['list/index']);
+    }
+
+    /**
+     * Deletes an existing Media item model.
+     * If deletion is successful, the browser will be redirected to the 'index' page.
+     * @param integer $id
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionDelete($id)
+    {
+
+        $model = $this->findModel($id);
+        if($model->delete()) {
+
+            // @TODO: remove redirects of deleted pages
+
+            Yii::$app->getSession()->setFlash(
+                'success',
+                Yii::t(
+                    'app/modules/media',
+                    'OK! Media item `{name}` successfully deleted.',
+                    [
+                        'name' => $model->name
+                    ]
+                )
+            );
+        } else {
+            Yii::$app->getSession()->setFlash(
+                'danger',
+                Yii::t(
+                    'app/modules/media',
+                    'An error occurred while deleting a media item `{name}`.',
+                    [
+                        'name' => $model->name
+                    ]
+                )
+            );
+        }
+
+        return $this->redirect(['list/index']);
+    }
+
+    /**
+     * Finds the Blog post model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param integer $id
+     * @return media model item
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findModel($id)
+    {
+        if (($model = Media::findOne($id)) !== null) {
+            return $model;
+        }
+
+        throw new NotFoundHttpException(Yii::t('app/modules/blog', 'The requested media item does not exist.'));
     }
 }

@@ -51,7 +51,239 @@ class Module extends BaseModule
     /**
      * @var string, the default path to save media files in @webroot
      */
-    public $mediaPath= "/uploads/media";
+    public $mediaPath = "/uploads/media";
+
+    public $maxFilesToUpload = 10;
+
+    public $allowedMime = [
+        'image/png' => true,
+        'image/jpeg' => true,
+        'image/gif' => true,
+        'image/tiff' => false,
+        'image/svg+xml' => true,
+        'image/webp' => false,
+        'video/mpeg' => true,
+        'video/mp4' => true,
+        'video/ogg' => false,
+        'video/quicktime' => true,
+        'video/webm' => true,
+        'video/x-ms-wmv' => true,
+        'video/vnd.avi' => true,
+        'audio/mpeg' => true,
+        'audio/webm' => false,
+        'audio/ogg' => false,
+        'audio/mp4' => false,
+        'audio/aac' => false,
+        'audio/x-ms-wma' => false,
+        'audio/vnd.wave' => false,
+        'audio/vnd.rn-realaudio' => false,
+        'application/pdf' => true,
+        'application/msword' => true,
+        'application/vnd.oasis.opendocument.text' => false,
+        'application/vnd.ms-excel' => true,
+        'application/vnd.oasis.opendocument.spreadsheet' => false,
+        'application/vnd.ms-powerpoint' => false,
+        'application/vnd.oasis.opendocument.presentation' => false,
+        'application/rtf' => true,
+        'application/json' => true,
+        'text/csv' => true,
+        'text/plain' => true,
+    ];
+
+    private $mimeTypes = [
+        'image/png' => [
+            'title' => 'PNG',
+            'description' => 'Portable Network Graphics',
+            'extensions' => ['.png', '.apng'],
+            'type' => 'image'
+        ],
+        'image/jpeg' => [
+            'title' => 'JPEG',
+            'description' => 'Joint Photographic Experts Group Format',
+            'extensions' => ['.jpg', '.jpeg', '.jpe', '.jfif'],
+            'type' => 'image'
+        ],
+        'image/gif' => [
+            'title' => 'GIF',
+            'description' => 'Graphics Interchange Format',
+            'extensions' => ['.gif'],
+            'type' => 'image'
+        ],
+        'image/tiff' => [
+            'title' => 'TIFF',
+            'description' => 'Tagged Image File Format',
+            'extensions' => ['.tif', '.tiff'],
+            'type' => 'image'
+        ],
+        'image/svg+xml' => [
+            'title' => 'SVG',
+            'description' => 'Scalable Vector Graphics',
+            'extensions' => ['.svg', '.svgz'],
+            'type' => 'image'
+        ],
+        'image/webp' => [
+            'title' => 'WebP',
+            'description' => 'Web Picture Format',
+            'extensions' => ['.webp'],
+            'type' => 'image'
+        ],
+        'video/mpeg' => [
+            'title' => 'MPEG',
+            'description' => 'Moving Picture Experts Group',
+            'extensions' => ['.mpg', '.mpeg', '.mpv'],
+            'type' => 'video'
+        ],
+        'video/mp4' => [
+            'title' => 'MP4',
+            'description' => 'MPEG-4 Part 14 Video Format',
+            'extensions' => ['.mp4'],
+            'type' => 'video'
+        ],
+        'video/ogg' => [
+            'title' => 'OGG',
+            'description' => 'Ogg Theora',
+            'extensions' => ['.ogv', '.ogg'],
+            'type' => 'video'
+        ],
+        'video/quicktime' => [
+            'title' => 'QuickTime',
+            'description' => 'QuickTime Media Format',
+            'extensions' => ['.mov'],
+            'type' => 'video'
+        ],
+        'video/webm' => [
+            'title' => 'WebM',
+            'description' => 'Web Media Video Format',
+            'extensions' => ['.webm'],
+            'type' => 'video'
+        ],
+        'video/x-ms-wmv' => [
+            'title' => 'WMV',
+            'description' => 'Windows Media Video',
+            'extensions' => ['.wmv'],
+            'type' => 'video'
+        ],
+        'video/vnd.avi' => [
+            'title' => 'AVI',
+            'description' => 'Audio Video Interleave',
+            'extensions' => ['.avi'],
+            'type' => 'video'
+        ],
+        'audio/mpeg' => [
+            'title' => 'MP3',
+            'description' => 'MPEG Layer 3',
+            'extensions' => ['.mp3'],
+            'type' => 'audio'
+        ],
+        'audio/webm' => [
+            'title' => 'WebM Audio',
+            'description' => 'Web Media Audio Format',
+            'extensions' => ['.weba'],
+            'type' => 'audio'
+        ],
+        'audio/ogg' => [
+            'title' => 'Ogg Audio',
+            'description' => 'Ogg Vorbis Audio Format',
+            'extensions' => ['.ogg', '.oga', '.sb0'],
+            'type' => 'audio'
+        ],
+        'audio/mp4' => [
+            'title' => 'MP4',
+            'description' => 'MPEG-4 Part 14 Audio Format',
+            'extensions' => ['.mp4'],
+            'type' => 'audio'
+        ],
+        'audio/aac' => [
+            'title' => 'AAC',
+            'description' => 'Advanced Audio Coding',
+            'extensions' => ['.aac'],
+            'type' => 'audio'
+        ],
+        'audio/x-ms-wma' => [
+            'title' => 'WMA',
+            'description' => 'Windows Media Audio',
+            'extensions' => ['.wma'],
+            'type' => 'audio'
+        ],
+        'audio/vnd.wave' => [
+            'title' => 'WAV',
+            'description' => 'Waveform Audio File Format',
+            'extensions' => ['.wav'],
+            'type' => 'audio'
+        ],
+        'audio/vnd.rn-realaudio' => [
+            'title' => 'RM',
+            'description' => 'RealMedia',
+            'extensions' => ['.rm', '.ram', '.rmvb'],
+            'type' => 'audio'
+        ],
+        'application/pdf' => [
+            'title' => 'PDF',
+            'description' => 'Adobe Portable Document Format',
+            'extensions' => ['.pdf'],
+            'type' => 'document'
+        ],
+        'application/msword' => [
+            'title' => 'MS Word',
+            'description' => 'Microsoft Office Word',
+            'extensions' => ['.doc', '.docx'],
+            'type' => 'document'
+        ],
+        'application/vnd.oasis.opendocument.text' => [
+            'title' => 'ODF',
+            'description' => 'OpenDocument Text',
+            'extensions' => ['.odt'],
+            'type' => 'document'
+        ],
+        'application/vnd.ms-excel' => [
+            'title' => 'MS Excel',
+            'description' => 'Microsoft Office Excel',
+            'extensions' => ['.xls', '.xlsx'],
+            'type' => 'document'
+        ],
+        'application/vnd.oasis.opendocument.spreadsheet' => [
+            'title' => 'ODS',
+            'description' => 'OpenDocument Spreadsheet',
+            'extensions' => ['.ods'],
+            'type' => 'document'
+        ],
+        'application/vnd.ms-powerpoint' => [
+            'title' => 'MS PowerPoint',
+            'description' => 'Microsoft Office PowerPoint',
+            'extensions' => ['.ppt'],
+            'type' => 'document'
+        ],
+        'application/vnd.oasis.opendocument.presentation' => [
+            'title' => 'ODP',
+            'description' => 'OpenDocument Presentation',
+            'extensions' => ['.odp'],
+            'type' => 'document'
+        ],
+        'application/rtf' => [
+            'title' => 'RTF',
+            'description' => 'Rich Text Format',
+            'extensions' => ['.rtf'],
+            'type' => 'document'
+        ],
+        'application/json' => [
+            'title' => 'JSON',
+            'description' => 'JavaScript Object Notation',
+            'extensions' => ['.json'],
+            'type' => 'document'
+        ],
+        'text/csv' => [
+            'title' => 'CSV',
+            'description' => 'Comma-Separated Values',
+            'extensions' => ['.csv'],
+            'type' => 'document'
+        ],
+        'text/plain' => [
+            'title' => 'TXT',
+            'description' => 'Plain Text',
+            'extensions' => ['.txt'],
+            'type' => 'document'
+        ]
+    ];
 
     /**
      * @var string the module version
@@ -119,6 +351,88 @@ class Module extends BaseModule
         parent::bootstrap($app);
     }
 
+    public function getAllowedMime($asArray = true)
+    {
+        $list = [];
+        foreach ($this->allowedMime as $mime => $value) {
+            if ($value === true)
+                $list[] = $mime;
+        }
+
+        if ($asArray)
+            return $list;
+        else
+            return implode(", ", $list);
+
+    }
+
+    public function getMimeTypes($asArray = true)
+    {
+        $list = $this->mimeTypes;
+
+        if ($asArray)
+            return $list;
+        else
+            return implode(", ", $list);
+
+    }
+
+    public function getAllowedExtensions($asArray = true)
+    {
+        $list = [];
+        foreach ($this->allowedMime as $mime => $value) {
+            if ($value === true && isset($types[$mime])) {
+                if (isset($types[$mime]['extensions'])) {
+                    if ($extensions = $types[$mime]['extensions']) {
+                        foreach ($extensions as $extension) {
+                            $list[] = $extension;
+                        }
+                    }
+                }
+
+            }
+        }
+
+        if ($asArray)
+            return $list;
+        else
+            return str_replace(".", "", implode(", ", $list));
+
+    }
+
+    /**
+     * @return array
+     */
+    public function getMimeTypesList($allTypes = false)
+    {
+        $list = [];
+        if ($allTypes)
+            $list['*'] = Yii::t('app/modules/media', 'All types');
+
+        if ($types = $this->getMimeTypes()) {
+            $allowed = $this->getAllowedMime();
+            foreach ($types as $mime => $value) {
+                if (in_array($mime, $allowed)) {
+                    $list[$mime] = $value['title'];
+                }
+            }
+        }
+
+        return $list;
+    }
+
+    public function getTypeByMime($mime = null) {
+        if (!is_null($mime)) {
+            $types = $this->getMimeTypes();
+            if (isset($types[$mime])) {
+                if ($mime = $types[$mime]) {
+                    return $mime;
+                }
+            }
+        }
+
+        return null;
+    }
 
     /**
      * {@inheritdoc}
