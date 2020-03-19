@@ -484,7 +484,9 @@ class Media extends ActiveRecord
                     $this->path = $filepath;
                     $this->mime_type = $file->type;
 
-                    if ($mime = $this->module->getTypeByMime($this->mime_type)) {
+                    if ($mime = $this->module->getTypeByMime($this->mime_type) && in_array($file->extension, [
+                            'jpg', 'jpeg', 'gif', 'png', 'wbmp', 'xbm', 'webp', 'bmp'
+                        ])) {
                         if (isset($mime['type'])) {
                             if ($mime['type'] == 'image') {
                                 $thumbpath = Yii::getAlias('@webroot') . $this->getMediaThumbsPath();
@@ -515,25 +517,32 @@ class Media extends ActiveRecord
 
     public function getSource($asWebURL = true, $checkFileExists = false) {
 
-        $filepath = (($asWebURL) ? Yii::getAlias('@web') : Yii::getAlias('@webroot')) . $this->path;
+        $filepath = Yii::getAlias('@web') . $this->path;
+        $realpath = Yii::getAlias('@webroot') . $this->path;
+        $source = (($asWebURL) ? $filepath : $realpath);
 
         if ($checkFileExists) {
-            if (file_exists($filepath))
-                return $filepath;
+            if (file_exists($realpath))
+                return $source;
             else
                 return false;
         } else {
-            return $filepath;
+            return $source;
         }
     }
 
     public function getThumbnail($asWebURL = true, $checkFileExists = false) {
 
-        $thumbpath = (($asWebURL) ? Yii::getAlias('@web') : Yii::getAlias('@webroot')) . $this->getMediaThumbsPath();
-        $thumbnail = $thumbpath . "/" . md5($this->path) . ".jpg";
+        $thumbpath = Yii::getAlias('@web') . $this->getMediaThumbsPath();
+        $realpath = Yii::getAlias('@webroot') . $this->getMediaThumbsPath();
+
+        if ($asWebURL)
+            $thumbnail = $thumbpath . "/" . md5($this->path) . ".jpg";
+        else
+            $thumbnail = $realpath . "/" . md5($this->path) . ".jpg";
 
         if ($checkFileExists) {
-            if (file_exists($thumbnail))
+            if (file_exists($realpath . "/" . md5($this->path) . ".jpg"))
                 return $thumbnail;
             else
                 return false;
