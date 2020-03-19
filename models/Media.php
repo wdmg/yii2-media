@@ -482,12 +482,19 @@ class Media extends ActiveRecord
                 if ($file->saveAs($savepath)) {
 
                     $this->path = $filepath;
-                    $this->mime_type = $file->type;
 
-                    if ($mime = $this->module->getTypeByMime($this->mime_type) && in_array($file->extension, [
-                            'jpg', 'jpeg', 'gif', 'png', 'wbmp', 'xbm', 'webp', 'bmp'
-                        ])) {
-                        if (isset($mime['type'])) {
+                    if ($file->type)
+                        $this->mime_type = $file->type;
+                    else
+                        $this->mime_type = \yii\helpers\FileHelper::getMimeType($savepath);
+
+                    $this->size = $file->size;
+
+                    if ($mime = $this->module->getTypeByMime($this->mime_type)) {
+                        if (isset($mime['type']) && in_array($file->extension, [
+                                'jpg', 'jpeg', 'gif', 'png', 'wbmp', 'xbm', 'webp', 'bmp'
+                            ])) {
+
                             if ($mime['type'] == 'image') {
                                 $thumbpath = Yii::getAlias('@webroot') . $this->getMediaThumbsPath();
                                 if (\yii\helpers\FileHelper::createDirectory($thumbpath, $mode = 0775, $recursive = true)) {
@@ -498,6 +505,7 @@ class Media extends ActiveRecord
                                         ]);
                                 }
                             }
+
                         }
                     }
 

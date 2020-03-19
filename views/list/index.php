@@ -29,7 +29,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 ['class' => 'yii\grid\SerialColumn'],
 
                 [
-                    'attribute' => 'preview',
+                    'attribute' => 'name',
                     'format' => 'raw',
                     'value' => function($data) use ($module) {
                         $preview = '';
@@ -38,47 +38,50 @@ $this->params['breadcrumbs'][] = $this->title;
                                 if ($mime['type'] == 'image') {
                                     if ($thumnail = $data->getThumbnail(true, true)) {
                                         $preview = Html::tag('img', '', [
-                                            'class' => 'img-thumbnail',
+                                            'class' => 'media-object img-thumbnail',
                                             'style' => 'width:64px;max-height:96px;',
                                             'src' => $thumnail
                                         ]);
                                     } else {
                                         $preview = Html::tag('span', '', [
-                                            'class' => 'icon icon-filetype ' . $mime['icon']
+                                            'class' => 'media-object icon icon-filetype ' . $mime['icon']
                                         ]);
                                     }
                                 } else {
                                     $preview = Html::tag('span', '', [
-                                        'class' => 'icon icon-filetype ' . $mime['icon']
+                                        'class' => 'media-object icon icon-filetype ' . $mime['icon']
                                     ]);
                                 }
                             } else {
                                 $preview = Html::tag('span', '', [
-                                    'class' => 'icon icon-filetype icon-unknown'
+                                    'class' => 'media-object icon icon-filetype icon-unknown'
                                 ]);
                             }
                         } else {
                             $preview = Html::tag('span', '', [
-                                'class' => 'icon icon-filetype icon-unknown'
+                                'class' => 'media-object icon icon-filetype icon-unknown'
                             ]);
                         }
 
-                        return $preview;
-
-                    }
-                ],
-                [
-                    'attribute' => 'name',
-                    'format' => 'raw',
-                    'value' => function($data) use ($module) {
-                        $preview = '';
                         $output = Html::tag('strong', $data->name);
+
+                        if ($data->size) {
+                            $formatter = Yii::$app->formatter;
+                            $formatter->sizeFormatBase = 1000;
+                            $output .= '<br/>' . Html::tag('em', $formatter->asShortSize($data->size, 2), [
+                                'class' => "text-muted"
+                            ]);
+                        }
+
                         if (($mediaURL = $data->getMediaUrl(true, true)) && $data->id) {
                             $output .= '<br/>' . Html::a($data->url, $mediaURL, [
                                 'target' => '_blank',
                                 'data-pjax' => 0
                             ]);
                         }
+
+                        if (!empty($preview))
+                            return '<div class="media"><div class="media-left">' .$preview . '</div><div class="media-body">' . $output . '</div></div>';
 
                         return $output;
                     }
@@ -111,11 +114,11 @@ $this->params['breadcrumbs'][] = $this->title;
                         'class' => 'text-center'
                     ],
                     'value' => function($data) use ($module) {
+                        $disabled = (($data->status == $data::MEDIA_STATUS_DRAFT) ? ' disabled="disabled"' : "");
                         if ($mime = $module->getTypeByMime($data->mime_type)) {
                             if (isset($mime['type'])) {
                                 $type = $mime['type'];
                                 $title = ((isset($mime['title'])) ? $mime['title'] : "");
-                                $disabled = (($data->status == $data::MEDIA_STATUS_DRAFT) ? ' disabled="disabled"' : "");
                                 if ($type == 'image') {
                                     return '<span class="label label-success" title="' . $title . '"' . $disabled . '>'.Yii::t('app/modules/media','Image').'</span>';
                                 } elseif ($type == 'video') {
@@ -126,10 +129,10 @@ $this->params['breadcrumbs'][] = $this->title;
                                     return '<span class="label label-warning" title="' . $title . '"' . $disabled . '>'.Yii::t('app/modules/media','Document').'</span>';
                                 }
                             } else {
-                                return '<span class="label label-warning" title="' . $title . '"' . $disabled . '>'.Yii::t('app/modules/media','Document').'</span>';
+                                return '<span class="label label-warning" title="Unknown"' . $disabled . '>'.Yii::t('app/modules/media','Document').'</span>';
                             }
                         } else {
-                            return '<span class="label label-default" title="' . $title . '"' .$disabled . '>'.Yii::t('app/modules/media','Unknown').'</span>';
+                            return '<span class="label label-default" title="Unknown"' .$disabled . '>'.Yii::t('app/modules/media','Unknown').'</span>';
                         }
                     }
                 ],
@@ -137,11 +140,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 /*'params',*/
                 /*'reference',*/
                 [
-                    'attribute' => 'categories',
+                    'attribute' => 'cat_id',
                     'format' => 'html',
                     'filter' => SelectInput::widget([
                         'model' => $searchModel,
-                        'attribute' => 'categories',
+                        'attribute' => 'cat_id',
                         'items' => $searchModel->getAllCategoriesList(true),
                         'options' => [
                             'id' => 'blogsearch-categories',
@@ -198,6 +201,10 @@ $this->params['breadcrumbs'][] = $this->title;
                     'attribute' => 'created',
                     'label' => Yii::t('app/modules/media','Uploaded by'),
                     'format' => 'html',
+                    'contentOptions' => [
+                        'class' => 'text-center',
+                        'style' => 'min-width:146px'
+                    ],
                     'value' => function($data) {
 
                         $output = "";

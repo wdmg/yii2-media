@@ -106,7 +106,7 @@ class Module extends BaseModule
             'type' => 'image'
         ],
         'image/jpeg' => [
-            'icon' => 'icon-image-jpg',
+            'icon' => 'icon-image-jpeg',
             'title' => 'JPEG',
             'description' => 'Joint Photographic Experts Group Format',
             'extensions' => ['.jpg', '.jpeg', '.jpe', '.jfif'],

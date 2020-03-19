@@ -77,12 +77,11 @@ class MediaSearch extends Media
         if ($this->size !== "*")
             $query->andFilterWhere(['like', 'size', $this->size]);
 
+        if (intval($this->cat_id) !== 0)
+            $query->andFilterWhere(['like', 'cat_id', $this->cat_id]);
+
         if ($this->status !== "*")
             $query->andFilterWhere(['like', 'status', $this->status]);
-
-        if (intval($this->cat_id) !== 0) {
-            $query->leftJoin(['cats' => Categories::tableName()], '`media`.`cat_id` = `cats`.`id`');
-        }
 
         return $dataProvider;
     }

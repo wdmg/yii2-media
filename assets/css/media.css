@@ -1,8 +1,9 @@
 .icon.icon-filetype {
     display: inline-block;
     float: left;
-    width: 32px;
+    width: 64px;
     height: 48px;
+    margin-top: 5px;
     background-position: center;
     background-repeat: no-repeat;
     background-size: contain;

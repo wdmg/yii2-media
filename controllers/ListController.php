@@ -73,6 +73,10 @@ class ListController extends Controller
     {
         $model = new Media();
         $searchModel = new MediaSearch();
+
+        if ($cat_id = Yii::$app->request->get('cat_id', null))
+            $searchModel->cat_id = intval($cat_id);
+
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -83,6 +87,89 @@ class ListController extends Controller
         ]);
     }
 
+    /**
+     * Updates an existing Media item model.
+     * If update is successful, the browser will be redirected to the 'index' page.
+     * @param integer $id
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionUpdate($id)
+    {
+        $model = $this->findModel($id);
+
+        // Get current URL before save this media item
+        $oldMediaUrl = $model->getMediaUrl(false);
+
+        if (Yii::$app->request->isAjax) {
+            if ($model->load(Yii::$app->request->post())) {
+                if ($model->validate())
+                    $success = true;
+                else
+                    $success = false;
+
+                return $this->asJson(['success' => $success, 'alias' => $model->alias, 'errors' => $model->errors]);
+            }
+        } else {
+            if ($model->load(Yii::$app->request->post())) {
+
+                // Get new URL for saved blog item
+                $newMediaUrl = $model->getMediaUrl(false);
+
+                if ($model->save()) {
+
+                    // Set 301-redirect from old URL to new
+                    if (isset(Yii::$app->redirects) && ($oldMediaUrl !== $newMediaUrl) && ($model->status == $model::MEDIA_STATUS_PUBLISHED)) {
+                        // @TODO: remove old redirects
+                        Yii::$app->redirects->set('media', $oldMediaUrl, $newMediaUrl, 301);
+                    }
+
+                    Yii::$app->getSession()->setFlash(
+                        'success',
+                        Yii::t(
+                            'app/modules/media',
+                            'OK! Media item `{name}` successfully updated.',
+                            [
+                                'name' => $model->name
+                            ]
+                        )
+                    );
+                } else {
+                    Yii::$app->getSession()->setFlash(
+                        'danger',
+                        Yii::t(
+                            'app/modules/media',
+                            'An error occurred while update a media item `{name}`.',
+                            [
+                                'name' => $model->name
+                            ]
+                        )
+                    );
+                }
+                return $this->redirect(['list/index']);
+            }
+        }
+
+        return $this->render('update', [
+            'module' => $this->module,
+            'model' => $model
+        ]);
+    }
+
+    /**
+     * Displays a single Media item post model.
+     * @param integer $id
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionView($id)
+    {
+        $model = $this->findModel($id);
+        return $this->render('view', [
+            'module' => $this->module,
+            'model' => $model
+        ]);
+    }
 
     public function actionUpload()
     {

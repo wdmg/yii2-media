@@ -27,7 +27,6 @@ class m200314_161944_media extends Migration
             'alias' => $this->string(128)->notNull(),
 
             'path' => $this->string(255)->notNull(),
-            'size' => $this->integer(19),
 
             'title' => $this->string(255),
             'caption' => $this->string(550),
@@ -35,6 +34,8 @@ class m200314_161944_media extends Migration
             'description' => $this->text(),
 
             'mime_type' => $this->string(128)->null(),
+            'size' => $this->integer(19),
+
             'params' => $this->text(),
             'reference' => $this->string(255)->null(),
 
