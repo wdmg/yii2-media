@@ -38,7 +38,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                     $preview = Html::tag('img', '', [
                                         'class' => 'img-thumbnail',
                                         'style' => 'width:64px;max-height:96px;',
-                                        'src' => $data->path
+                                        'src' => $data->thumbnail
                                     ]);
                                 }
                             }

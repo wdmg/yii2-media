@@ -94,7 +94,7 @@ class Media extends ActiveRecord
                 'skipOnEmpty' => true,
                 'immutable' => true,
                 'value' => function ($event) {
-                    return mb_substr($this->name, 0, 32);
+                    return mb_substr(str_replace('.', '-', $this->name), 0, 32);
                 }
             ],
         ];
@@ -223,6 +223,29 @@ class Media extends ActiveRecord
             return \yii\helpers\Url::to(str_replace('\\', '/', $mediaPath), true);
         else
             return $mediaPath;
+
+    }
+
+    /**
+     * @return string
+     */
+    public function getMediaThumbsPath($absoluteUrl = false)
+    {
+
+        if (isset(Yii::$app->params["media.mediaThumbsPath"])) {
+            $mediaThumbsPath = Yii::$app->params["media.mediaThumbsPath"];
+        } else {
+
+            if (!$module = Yii::$app->getModule('admin/media'))
+                $module = Yii::$app->getModule('media');
+
+            $mediaThumbsPath = $module->mediaThumbsPath;
+        }
+
+        if ($absoluteUrl)
+            return \yii\helpers\Url::to(str_replace('\\', '/', $mediaThumbsPath), true);
+        else
+            return $mediaThumbsPath;
 
     }
 
@@ -461,6 +484,21 @@ class Media extends ActiveRecord
                     $this->path = $filepath;
                     $this->mime_type = $file->type;
 
+                    if ($mime = $this->module->getTypeByMime($this->mime_type)) {
+                        if (isset($mime['type'])) {
+                            if ($mime['type'] == 'image') {
+                                $thumbpath = Yii::getAlias('@webroot') . $this->getMediaThumbsPath();
+                                if (\yii\helpers\FileHelper::createDirectory($thumbpath, $mode = 0775, $recursive = true)) {
+                                    $thumbnail = $thumbpath . "/" . md5($this->path) . ".jpg";
+                                    \yii\imagine\Image::thumbnail($savepath, 480, 360)
+                                        ->save($thumbnail, [
+                                            'quality' => 75
+                                        ]);
+                                }
+                            }
+                        }
+                    }
+
                     /*$media->params = Json::encode([
                         'type' => $file->type,
                         'extension' => $file->extension,
@@ -475,14 +513,44 @@ class Media extends ActiveRecord
         return false;
     }
 
+    public function getSource($asWebURL = true, $checkFileExists = false) {
+
+        $filepath = (($asWebURL) ? Yii::getAlias('@web') : Yii::getAlias('@webroot')) . $this->path;
+
+        if ($checkFileExists) {
+            if (file_exists($filepath))
+                return $filepath;
+            else
+                return false;
+        } else {
+            return $filepath;
+        }
+    }
+
+    public function getThumbnail($asWebURL = true, $checkFileExists = false) {
+
+        $thumbpath = (($asWebURL) ? Yii::getAlias('@web') : Yii::getAlias('@webroot')) . $this->getMediaThumbsPath();
+        $thumbnail = $thumbpath . "/" . md5($this->path) . ".jpg";
+
+        if ($checkFileExists) {
+            if (file_exists($thumbnail))
+                return $thumbnail;
+            else
+                return false;
+        } else {
+            return $thumbnail;
+        }
+    }
+
     public function delete()
     {
-        $filename = Yii::getAlias('@webroot') . $this->path;
-        if (!(parent::delete() === false)) {
-            if (file_exists($filename))
-                return @unlink($filename);
-        }
-        return false;
+        if ($filename = $this->getSource(false, true))
+            @unlink($filename);
+
+        if ($thumbnail = $this->getThumbnail(false, true))
+            @unlink($thumbnail);
+
+        return parent::delete();
     }
 
 }

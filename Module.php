@@ -52,6 +52,10 @@ class Module extends BaseModule
      * @var string, the default path to save media files in @webroot
      */
     public $mediaPath = "/uploads/media";
+    /**
+     * @var string, the default path to save media files in @webroot
+     */
+    public $mediaThumbsPath = "/uploads/media/_thumbs";
 
     public $maxFilesToUpload = 10;
 

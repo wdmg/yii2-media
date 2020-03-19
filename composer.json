@@ -22,6 +22,7 @@
   ],
   "require": {
     "yiisoft/yii2": "^2.0.20",
+    "yiisoft/yii2-imagine": "~2.2.0",
     "wdmg/yii2-base": "^1.1.2"
   },
   "minimum-stability": "dev",
