@@ -9,6 +9,8 @@ use wdmg\widgets\SelectInput;
 
 /* @var $this yii\web\View */
 
+$bundle = \wdmg\media\MediaAsset::register($this);
+
 $this->title = Yii::t('app/modules/media', 'Media library');
 $this->params['breadcrumbs'][] = $this->title;
 
@@ -26,7 +28,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'columns' => [
                 ['class' => 'yii\grid\SerialColumn'],
 
-
                 [
                     'attribute' => 'preview',
                     'format' => 'raw',
@@ -35,13 +36,31 @@ $this->params['breadcrumbs'][] = $this->title;
                         if ($mime = $module->getTypeByMime($data->mime_type)) {
                             if (isset($mime['type'])) {
                                 if ($mime['type'] == 'image') {
-                                    $preview = Html::tag('img', '', [
-                                        'class' => 'img-thumbnail',
-                                        'style' => 'width:64px;max-height:96px;',
-                                        'src' => $data->getThumbnail(true, true)
+                                    if ($thumnail = $data->getThumbnail(true, true)) {
+                                        $preview = Html::tag('img', '', [
+                                            'class' => 'img-thumbnail',
+                                            'style' => 'width:64px;max-height:96px;',
+                                            'src' => $thumnail
+                                        ]);
+                                    } else {
+                                        $preview = Html::tag('span', '', [
+                                            'class' => 'icon icon-filetype ' . $mime['icon']
+                                        ]);
+                                    }
+                                } else {
+                                    $preview = Html::tag('span', '', [
+                                        'class' => 'icon icon-filetype ' . $mime['icon']
                                     ]);
                                 }
+                            } else {
+                                $preview = Html::tag('span', '', [
+                                    'class' => 'icon icon-filetype icon-unknown'
+                                ]);
                             }
+                        } else {
+                            $preview = Html::tag('span', '', [
+                                'class' => 'icon icon-filetype icon-unknown'
+                            ]);
                         }
 
                         return $preview;
