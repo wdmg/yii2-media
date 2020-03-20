@@ -155,13 +155,13 @@ class CatsController extends Controller
                     // Set 301-redirect from old URL to new
                     if (isset(Yii::$app->redirects) && ($oldCategoryUrl !== $newCategoryUrl)) {
                         // @TODO: remove old redirects
-                        Yii::$app->redirects->set('blog', $oldCategoryUrl, $newCategoryUrl, 301);
+                        Yii::$app->redirects->set('media', $oldCategoryUrl, $newCategoryUrl, 301);
                     }
 
                     Yii::$app->getSession()->setFlash(
                         'success',
                         Yii::t(
-                            'app/modules/blog',
+                            'app/modules/media',
                             'OK! Category `{name}` successfully updated.',
                             [
                                 'name' => $model->name
@@ -172,7 +172,7 @@ class CatsController extends Controller
                     Yii::$app->getSession()->setFlash(
                         'danger',
                         Yii::t(
-                            'app/modules/blog',
+                            'app/modules/media',
                             'An error occurred while update a category `{name}`.',
                             [
                                 'name' => $model->name

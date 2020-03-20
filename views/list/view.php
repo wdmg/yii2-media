@@ -9,7 +9,7 @@ use yii\widgets\DetailView;
 
 $bundle = \wdmg\media\MediaAsset::register($this);
 
-$this->title = Yii::t('app/modules/blog', 'View media');
+$this->title = Yii::t('app/modules/media', 'View media');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app/modules/media', 'Media library'), 'url' => ['list/index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -29,6 +29,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'attribute' => 'preview',
+                'label' => Yii::t('app/modules/media', 'Preview'),
                 'format' => 'raw',
                 'value' => function($data) use ($module) {
                     $preview = '';
@@ -75,6 +76,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'attribute' => 'url',
+                'label' => Yii::t('app/modules/media', 'Media URL'),
                 'format' => 'raw',
                 'value' => function($data) use ($module) {
                     if (($mediaURL = $data->getMediaUrl(true, true)) && $data->id) {
@@ -89,6 +91,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'attribute' => 'source',
+                'label' => Yii::t('app/modules/media', 'Source'),
                 'format' => 'raw',
                 'value' => function($data) use ($module) {
                     if (($mediaURL = $data->getSource(true, true)) && $data->id) {
@@ -140,6 +143,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
             [
                 'attribute' => 'categories',
+                'label' => Yii::t('app/modules/media', 'Category'),
                 'format' => 'html',
                 'value' => function($data) {
                     if ($categories = $data->getCategories()) {

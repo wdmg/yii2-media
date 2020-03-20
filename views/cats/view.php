@@ -5,7 +5,7 @@ use yii\helpers\Url;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model wdmg\blog\models\Categories */
+/* @var $model wdmg\media\models\Categories */
 
 $this->title = Yii::t('app/modules/media', 'View category');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app/modules/media', 'Media library'), 'url' => ['list/index']];
@@ -15,7 +15,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="page-header">
     <h1><?= Html::encode($this->title) ?> <small class="text-muted pull-right">[v.<?= $this->context->module->version ?>]</small></h1>
 </div>
-<div class="blog-cats-view">
+<div class="media-cats-view">
 
     <?= DetailView::widget([
         'model' => $model,

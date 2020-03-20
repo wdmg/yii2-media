@@ -113,7 +113,7 @@ class ListController extends Controller
         } else {
             if ($model->load(Yii::$app->request->post())) {
 
-                // Get new URL for saved blog item
+                // Get new URL for saved media item
                 $newMediaUrl = $model->getMediaUrl(false);
 
                 if ($model->save()) {
@@ -249,7 +249,7 @@ class ListController extends Controller
     }
 
     /**
-     * Finds the Blog post model based on its primary key value.
+     * Finds the Media item model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
      * @return media model item
@@ -261,6 +261,6 @@ class ListController extends Controller
             return $model;
         }
 
-        throw new NotFoundHttpException(Yii::t('app/modules/blog', 'The requested media item does not exist.'));
+        throw new NotFoundHttpException(Yii::t('app/modules/media', 'The requested media item does not exist.'));
     }
 }

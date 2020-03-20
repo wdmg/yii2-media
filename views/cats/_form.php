@@ -10,7 +10,7 @@ use wdmg\widgets\SelectInput;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-    <div class="blog-form">
+    <div class="media-cats-form">
         <?php $form = ActiveForm::begin([
             'id' => "addCategoryForm",
             'enableAjaxValidation' => true,
@@ -62,9 +62,9 @@ $(document).ready(function() {
                     data: form.serializeArray(),
                 }
             ).done(function(data) {
-                if (data.alias && form.find('#blog-alias').val().length == 0) {
-                    form.find('#blog-alias').val(data.alias);
-                    form.yiiActiveForm('validateAttribute', 'blog-alias');
+                if (data.alias && form.find('#categories-alias').val().length == 0) {
+                    form.find('#categories-alias').val(data.alias);
+                    form.yiiActiveForm('validateAttribute', 'categories-alias');
                 }
             }).fail(function () {
                 /*form.find('#options-type').val("");

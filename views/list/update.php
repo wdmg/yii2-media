@@ -59,7 +59,7 @@ $this->params['breadcrumbs'][] = Yii::t('app/modules/media', 'Edit');
             'options' => [
                 'class' => 'form-control'
             ]
-        ]); ?>
+        ])->label(Yii::t('app/modules/media', 'Category')); ?>
 
         <?= $form->field($model, 'status')->widget(SelectInput::class, [
             'items' => $model->getStatusesList(),

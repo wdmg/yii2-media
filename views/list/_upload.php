@@ -27,7 +27,7 @@ use wdmg\widgets\SelectInput;
         'options' => [
             'class' => 'form-control'
         ]
-    ]); ?>
+    ])->label(Yii::t('app/modules/media', 'Category')); ?>
     <?= $form->field($model, 'files[]')->fileInput(['multiple' => true]) ?>
     <div class="row">
         <div class="modal-footer" style="clear:both;display:inline-block;width:100%;padding-bottom:0;">

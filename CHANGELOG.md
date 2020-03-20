@@ -1,6 +1,16 @@
 Changelog
 =========
 
+## 1.0.0 (2020-03-20)
+ * CRUD for media items/categories, translations
+ * Added file types icons
+ 
+## 0.0.3 (2020-03-19)
+ * Source and thumbnail fix
+ * Image preview thumbnails
+ * Added mime types validator, edit views for media items
+ * Added upload functionality
+ 
 ## 0.0.2 (2020-03-15)
  * Migrations, base module and models
  

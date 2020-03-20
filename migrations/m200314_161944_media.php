@@ -93,9 +93,9 @@ class m200314_161944_media extends Migration
      */
     public function safeDown()
     {
-        $this->dropIndex('{{%idx-blog}}', '{{%media}}');
-        $this->dropIndex('{{%idx-blog-alias}}', '{{%media}}');
-        $this->dropIndex('{{%idx-blog-status}}', '{{%media}}');
+        $this->dropIndex('{{%idx-media}}', '{{%media}}');
+        $this->dropIndex('{{%idx-media-alias}}', '{{%media}}');
+        $this->dropIndex('{{%idx-media-status}}', '{{%media}}');
 
         $this->dropForeignKey(
             'fk_media_to_cats',

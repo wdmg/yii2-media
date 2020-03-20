@@ -53,10 +53,6 @@ class Media extends ActiveRecord
         if (!$this->module = Yii::$app->getModule('admin/media'))
             $this->module = Yii::$app->getModule('media');
 
-        /*var_dump($this->module->getAllowedMime());
-        var_dump($this->module->getAllowedExtensions(false));
-        die();*/
-
     }
 
     /**
@@ -88,13 +84,13 @@ class Media extends ActiveRecord
             ],
             'sluggable' =>  [
                 'class' => SluggableBehavior::class,
-                'attribute' => ['name'],
+                'attribute' => 'name',
                 'slugAttribute' => 'alias',
                 'ensureUnique' => true,
                 'skipOnEmpty' => true,
                 'immutable' => true,
                 'value' => function ($event) {
-                    return mb_substr(str_replace('.', '-', $this->name), 0, 32);
+                    return mb_substr($this->name, 0, 32);
                 }
             ],
         ];

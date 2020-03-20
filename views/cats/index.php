@@ -7,7 +7,7 @@ use yii\widgets\Pjax;
 use wdmg\widgets\SelectInput;
 
 /* @var $this yii\web\View */
-/* @var $model wdmg\blog\models\Categories */
+/* @var $model wdmg\media\models\Categories */
 
 $bundle = \wdmg\media\MediaAsset::register($this);
 
@@ -21,7 +21,7 @@ $this->params['breadcrumbs'][] = Yii::t('app/modules/media', 'All categories');
         <?= Html::encode($this->title) ?> <small class="text-muted pull-right">[v.<?= $this->context->module->version ?>]</small>
     </h1>
 </div>
-<div class="blog-cats-index">
+<div class="media-cats-index">
 
     <?php Pjax::begin(); ?>
     <?= GridView::widget([
@@ -100,7 +100,7 @@ $this->params['breadcrumbs'][] = Yii::t('app/modules/media', 'All categories');
 
             [
                 'attribute' => 'media',
-                'label' => Yii::t('app/modules/media', 'Media items'),
+                'label' => Yii::t('app/modules/media', 'Items'),
                 'format' => 'html',
                 'value' => function($data) {
                     if ($media = $data->media) {

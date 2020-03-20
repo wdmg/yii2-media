@@ -141,13 +141,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 /*'reference',*/
                 [
                     'attribute' => 'cat_id',
+                    'label' => Yii::t('app/modules/media', 'Category'),
                     'format' => 'html',
                     'filter' => SelectInput::widget([
                         'model' => $searchModel,
                         'attribute' => 'cat_id',
                         'items' => $searchModel->getAllCategoriesList(true),
                         'options' => [
-                            'id' => 'blogsearch-categories',
+                            'id' => 'media-search-categories',
                             'class' => 'form-control'
                         ]
                     ]),
