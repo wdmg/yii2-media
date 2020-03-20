@@ -36,6 +36,7 @@ class ListController extends Controller
                 'class' => VerbFilter::class,
                 'actions' => [
                     'delete' => ['POST'],
+                    'batch' => ['POST'],
                 ],
             ],
             'access' => [
@@ -76,6 +77,8 @@ class ListController extends Controller
 
         if ($cat_id = Yii::$app->request->get('cat_id', null))
             $searchModel->cat_id = intval($cat_id);
+        else
+            $searchModel->cat_id = '*';
 
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
@@ -183,12 +186,13 @@ class ListController extends Controller
 
                         $media = new Media();
                         if (is_null($media->name))
-                            $media->name = $file->name;
+                            $media->name = $file->baseName;
 
                         if (is_null($media->cat_id))
                             $media->cat_id = Categories::DEFAULT_CATEGORY_ID;
 
                         if ($media->load(Yii::$app->request->post()) && $media->upload($file)) {
+
                             if ($media->validate()) {
                                 $media->save();
                             }/* else {
@@ -208,6 +212,76 @@ class ListController extends Controller
     }
 
     /**
+     */
+    public function actionBatch($action = null, $attribute = null, $value = null)
+    {
+        if (Yii::$app->request->isPost) {
+            $selection = Yii::$app->request->post('selected', null);
+            if (!is_null($selection)) {
+                if ($action == 'change') {
+
+                    if ($attribute == 'status') {
+                        $updated = Media::updateAll(['status' => intval($value)], ['id' => $selection]);
+                    } elseif ($attribute == 'cat_id') {
+                        $updated = Media::updateAll(['cat_id' => intval($value)], ['id' => $selection]);
+                    }
+
+                    if ($updated)
+                        Yii::$app->getSession()->setFlash(
+                            'success',
+                            Yii::t(
+                                'app/modules/media',
+                                'OK! {count, number} media {count, plural, one{item} few{items} other{items}} successfully {count, plural, one{updated} few{updated} other{updated}}.',
+                                [
+                                    'count' => $updated
+                                ]
+                            )
+                        );
+                    else
+                        Yii::$app->getSession()->setFlash(
+                            'danger',
+                            Yii::t(
+                                'app/modules/media',
+                                'An error occurred while updating a media item(s).'
+                            )
+                        );
+
+                } elseif ($action == 'delete') {
+
+                    $deleted = 0;
+                    $models = Media::findAll(['id' => $selection]);
+                    foreach($models as $model) {
+                        if ($model->delete())
+                            $deleted++;
+                    }
+
+                    if ($deleted)
+                        Yii::$app->getSession()->setFlash(
+                            'success',
+                            Yii::t(
+                                'app/modules/media',
+                                'OK! {count, number} media {count, plural, one{item} few{items} other{items}} successfully {count, plural, one{deleted} few{deleted} other{deleted}}.',
+                                [
+                                    'count' => $deleted
+                                ]
+                            )
+                        );
+                    else
+                        Yii::$app->getSession()->setFlash(
+                            'danger',
+                            Yii::t(
+                                'app/modules/media',
+                                'An error occurred while deleting a media item(s).'
+                            )
+                        );
+                }
+            }
+        }
+
+        return $this->redirect(['list/index']);
+    }
+
+    /**
      * Deletes an existing Media item model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
@@ -218,7 +292,7 @@ class ListController extends Controller
     {
 
         $model = $this->findModel($id);
-        if($model->delete()) {
+        if ($model->delete()) {
 
             // @TODO: remove redirects of deleted pages
 

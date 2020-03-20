@@ -20,13 +20,24 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
     <div class="media-list-index">
 
-        <?php Pjax::begin(); ?>
+        <?php Pjax::begin([
+            'id' => "pageContainer"
+        ]); ?>
         <?= GridView::widget([
+            'id' => "mediaList",
             'dataProvider' => $dataProvider,
             'filterModel' => $searchModel,
             'layout' => '{summary}<br\/>{items}<br\/>{summary}<br\/><div class="text-center">{pager}</div>',
             'columns' => [
                 ['class' => 'yii\grid\SerialColumn'],
+                [
+                    'class' => 'yii\grid\CheckboxColumn',
+                    'checkboxOptions' => function($model) {
+                        return [
+                            'value' => $model->id
+                        ];
+                    }
+                ],
 
                 [
                     'attribute' => 'name',
@@ -86,16 +97,6 @@ $this->params['breadcrumbs'][] = $this->title;
                         return $output;
                     }
                 ],
-
-                /*'name',
-                'alias',
-                'path',*/
-                /*'size',
-                'title',
-                'caption',
-                'alt',
-                'description',*/
-
                 [
                     'attribute' => 'mime_type',
                     'format' => 'raw',
@@ -136,9 +137,6 @@ $this->params['breadcrumbs'][] = $this->title;
                         }
                     }
                 ],
-
-                /*'params',*/
-                /*'reference',*/
                 [
                     'attribute' => 'cat_id',
                     'label' => Yii::t('app/modules/media', 'Category'),
@@ -196,8 +194,6 @@ $this->params['breadcrumbs'][] = $this->title;
                             return $data->status;
                     }
                 ],
-
-
                 [
                     'attribute' => 'created',
                     'label' => Yii::t('app/modules/media','Uploaded by'),
@@ -240,6 +236,69 @@ $this->params['breadcrumbs'][] = $this->title;
         ]); ?>
         <hr/>
         <div>
+            <div class="btn-group">
+                <?= Html::button(Yii::t('app/modules/media', 'Select action') . ' <span class="caret"></span>', [
+                    'id' => 'batchSelectAction',
+                    'class' => 'btn btn-default dropdown-toggle',
+                    'data-toggle' => 'dropdown',
+                    'aria-haspopup' => 'true',
+                    'aria-expanded' => 'false',
+                    'disabled' => 'disabled',
+                    'data-pjax' => '0'
+                ]) ?>
+                <ul class="dropdown-menu">
+                    <?php
+                        $categories = $model->getStatusesList(false);
+                        if ($categories) {
+                            foreach ($categories as $key => $name) {
+                                echo "<li>" . Html::a(Yii::t('app/modules/media', 'Change status to: {name}', [
+                                        'name' => $name
+                                    ]), [
+                                        'list/batch',
+                                        'action' => 'change',
+                                        'attribute' => 'status',
+                                        'value' => $key,
+                                    ], [
+                                        'id' => 'changeStatusSelected',
+                                        'data-method' => 'POST',
+                                        'data-pjax' => '0'
+                                    ]) . "</li>";
+                            }
+                        }
+                    ?>
+                    <li role="separator" class="divider"></li>
+                    <?php
+                        $categories = $model->getAllCategoriesList(false);
+                        if ($categories) {
+                            foreach ($categories as $key => $name) {
+                                echo "<li>" . Html::a(Yii::t('app/modules/media', 'Change category to: {name}', [
+                                        'name' => $name
+                                    ]), [
+                                        'list/batch',
+                                        'action' => 'change',
+                                        'attribute' => 'cat_id',
+                                        'value' => $key,
+                                    ], [
+                                        'id' => 'changeCategorySelected',
+                                        'data-method' => 'POST',
+                                        'data-pjax' => '0'
+                                    ]) . "</li>";
+                            }
+                        }
+                    ?>
+                    <li role="separator" class="divider"></li>
+                    <li>
+                        <?= Html::a(Yii::t('app/modules/media', 'Delete selected'), [
+                            'list/batch',
+                            'action' => 'delete'
+                        ], [
+                            'id' => 'batchDeleteSelected',
+                            'class' => 'bg-danger text-danger',
+                            'data-pjax' => '0'
+                        ]) ?>
+                    </li>
+                </ul>
+            </div>
             <?= Html::a(Yii::t('app/modules/media', 'Add new media'), ['list/upload'], [
                 'class' => 'btn btn-success pull-right',
                 'data-toggle' => 'modal',
@@ -253,6 +312,35 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php $this->registerJs(<<< JS
     $('body').delegate('#uploadNewMedia', 'hidden.bs.modal', function(event) {
         $(this).find('#uploadNewMediaForm')[0].reset();
+    });
+    $('body').delegate('#mediaList input[type="checkbox"]', 'click', function(event) {
+        setTimeout(function() {
+            var selected = $('#mediaList').yiiGridView('getSelectedRows');
+        if (selected.length) {
+            $('#batchSelectAction').removeAttr('disabled');
+        } else {
+            $('#batchSelectAction').attr('disabled', 'disabled');
+        }
+        }, 300);
+    });
+    $('body').delegate('#changeStatusSelected, #changeCategorySelected, #batchDeleteSelected', 'click', function(event) {
+        event.preventDefault();
+        var url = $(event.target).attr('href');
+        var selected = $('#mediaList').yiiGridView('getSelectedRows');
+        if (selected.length) {
+            $.post({
+                url: url,
+                data: {selected: selected},
+                success: function(data) {
+                    $.pjax({
+                        container: "#pageContainer"
+                    });
+                },
+                error:function(erorr, responseText, code) {
+                    window.location.reload();
+                }
+            });
+        }
     });
 JS
 ); ?>

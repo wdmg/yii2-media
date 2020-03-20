@@ -389,7 +389,7 @@ class Module extends BaseModule
             'active' => in_array(\Yii::$app->controller->module->id, [$this->id]),
             'items' => [
                 [
-                    'label' => Yii::t('app/modules/media', 'Media list'),
+                    'label' => Yii::t('app/modules/media', 'Library'),
                     'url' => [$this->routePrefix . '/media/list/'],
                     'active' => (in_array(\Yii::$app->controller->module->id, ['content']) &&  Yii::$app->controller->id == 'list'),
                 ],

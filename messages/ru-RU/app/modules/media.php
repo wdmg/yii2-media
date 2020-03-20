@@ -4,6 +4,7 @@ return [
 
     'Media' => "Медиа",
     'Media library' => "Медиа библиотека",
+    'Library' => "Библиотека",
 
     'ID' => "ИД",
     'Name' => "Название",
@@ -50,6 +51,16 @@ return [
     'Category URL' => "URL категории",
     'Category' => "Категория",
     'Categories' => "Категории",
+
+    'Select action' => "Выберите действие",
+    'Change status to: {name}' => "Изменить статус на: {name}",
+    'Change category to: {name}' => "Изменить категорию на: {name}",
+    'Delete selected' => "Удалить выбранное",
+
+    'OK! {count, number} media {count, plural, one{item} few{items} other{items}} successfully {count, plural, one{updated} few{updated} other{updated}}.' => "OK! {count, number} медиа {count, plural, one{элемент} few{элемента} other{элементов}} успешно {count, plural, one{обновлен} few{обновлены} other{обновлено}}.",
+    'An error occurred while updating a media item(s).' => "Произошла ошбка при обновлении медиа элемента(ов).",
+    'OK! {count, number} media {count, plural, one{item} few{items} other{items}} successfully {count, plural, one{deleted} few{deleted} other{deleted}}.' => "OK! {count, number} медиа {count, plural, one{элемент} few{элемента} other{элементов}} успешно {count, plural, one{удален} few{удалены} other{удалено}}.",
+    'An error occurred while deleting a media item(s).' => "Произошла ошбка при удалении медиа элемента(ов).",
 
     'Caption' => "Подпись",
     'Alternate' => "Альтернативное название",

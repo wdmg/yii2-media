@@ -2,6 +2,7 @@ Changelog
 =========
 
 ## 1.0.0 (2020-03-20)
+ * Added bulk actions for media items
  * CRUD for media items/categories, translations
  * Added file types icons
  
