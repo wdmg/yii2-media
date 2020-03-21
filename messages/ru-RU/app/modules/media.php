@@ -57,8 +57,12 @@ return [
     'Change category to: {name}' => "Изменить категорию на: {name}",
     'Delete selected' => "Удалить выбранное",
 
+    'OK! {count, number} media {count, plural, one{item} few{items} other{items}} successfully {count, plural, one{added} few{added} other{added}}.' => "OK! {count, number} медиа {count, plural, one{элемент} few{элемента} other{элементов}} успешно {count, plural, one{добавлен} few{добавлены} other{добавлено}}.",
+    'An error occurred while added a media item(s).' => "Произошла ошбка при добавлении медиа элемента(ов).",
+
     'OK! {count, number} media {count, plural, one{item} few{items} other{items}} successfully {count, plural, one{updated} few{updated} other{updated}}.' => "OK! {count, number} медиа {count, plural, one{элемент} few{элемента} other{элементов}} успешно {count, plural, one{обновлен} few{обновлены} other{обновлено}}.",
     'An error occurred while updating a media item(s).' => "Произошла ошбка при обновлении медиа элемента(ов).",
+
     'OK! {count, number} media {count, plural, one{item} few{items} other{items}} successfully {count, plural, one{deleted} few{deleted} other{deleted}}.' => "OK! {count, number} медиа {count, plural, one{элемент} few{элемента} other{элементов}} успешно {count, plural, one{удален} few{удалены} other{удалено}}.",
     'An error occurred while deleting a media item(s).' => "Произошла ошбка при удалении медиа элемента(ов).",
 
@@ -92,10 +96,10 @@ return [
     'The requested category does not exist.' => "Запрошенная категория не существует.",
 
     'Media item has been successfully added!' => "Медиа элемент был успешно добавлен!",
-    'An error occurred while add the new post.' => "Произошла ошибка при добавлении медиа элемента публикации.",
-    'OK! Blog item `{name}` successfully updated.' => "OK! Медиа элемент был успешно обновлён.",
+    'An error occurred while add the new media item.' => "Произошла ошибка при добавлении медиа элемента публикации.",
+    'OK! Media item `{name}` successfully updated.' => "OK! Медиа элемент `{name}` был успешно обновлён.",
     'An error occurred while update a media item `{name}`.' => "Произошла ошибка при обновлении медиа элемента `{name}`.",
-    'OK! Blog item `{name}` successfully deleted.' => "OK! Медиа элемент был успешно удалён.",
+    'OK! Media item `{name}` successfully deleted.' => "OK! Медиа элемент `{name}` был успешно удалён.",
     'An error occurred while deleting a media item `{name}`.' => "Произошла ошибка при удалении медиа элемента `{name}`.",
     'The requested media item does not exist.' => "Запрошенный медиа элемент не существует.",
 

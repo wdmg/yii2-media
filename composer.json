@@ -4,7 +4,7 @@
   "keywords": ["yii2", "yii2-media", "media", "library", "manager", "wdmg"],
   "type": "yii2-extension",
   "license": "MIT",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "homepage": "https://github.com/wdmg/yii2-media",
   "support": {
     "source": "https://github.com/wdmg/yii2-media",
@@ -33,7 +33,24 @@
   },
   "extra": {
     "options": {
-      "routePrefix": "admin"
+      "routePrefix": "admin",
+      "mediaRoute": "/media",
+      "mediaCategoriesRoute": "/media/categories",
+      "mediaPath": "/uploads/media",
+      "mediaThumbsPath": "/uploads/media/_thumbs",
+      "maxFilesToUpload": 10,
+      "allowedMime": {
+        "image/png": true,
+        "image/jpeg": true,
+        "image/gif": true,
+        "image/svg+xml": true,
+        "application/pdf": true,
+        "application/msword": true,
+        "application/vnd.ms-excel": true,
+        "application/rtf": true,
+        "text/csv": true,
+        "text/plain": true
+      }
     }
   }
 }

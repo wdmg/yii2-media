@@ -6,7 +6,7 @@ namespace wdmg\media;
  * Yii2 Media library
  *
  * @category        Module
- * @version         1.0.0
+ * @version         1.0.1
  * @author          Alexsander Vyshnyvetskyy <alex.vyshnyvetskyy@gmail.com>
  * @link            https://github.com/wdmg/yii2-media
  * @copyright       Copyright (c) 2019 - 2020 W.D.M.Group, Ukraine
@@ -43,22 +43,33 @@ class Module extends BaseModule
     public $description = "Media library";
 
     /**
-     * @var string the default routes to render media (use "/" - for root)
+     * @var string the default routes to render media item (use "/" - for root)
      */
     public $mediaRoute = "/media";
+
+    /**
+     * @var string the default routes to render media categories (use "/" - for root)
+     */
     public $mediaCategoriesRoute = "/media/categories";
 
     /**
      * @var string, the default path to save media files in @webroot
      */
     public $mediaPath = "/uploads/media";
+
     /**
-     * @var string, the default path to save media files in @webroot
+     * @var string, the default path to save media thumbnails in @webroot
      */
     public $mediaThumbsPath = "/uploads/media/_thumbs";
 
+    /**
+     * @var int, maximum files to upload
+     */
     public $maxFilesToUpload = 10;
 
+    /**
+     * @var array, allowed mime types
+     */
     public $allowedMime = [
         'image/png' => true,
         'image/jpeg' => true,
@@ -97,6 +108,9 @@ class Module extends BaseModule
         'text/plain' => true,
     ];
 
+    /**
+     * @var array, mime types collection of support
+     */
     private $mimeTypes = [
         'image/png' => [
             'icon' => 'icon-image-png',
@@ -348,7 +362,7 @@ class Module extends BaseModule
     /**
      * @var string the module version
      */
-    private $version = "1.0.0";
+    private $version = "1.0.1";
 
     /**
      * @var integer, priority of initialization

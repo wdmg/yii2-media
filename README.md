@@ -40,6 +40,24 @@ To add a module to the project, add the following data in your configuration fil
         'media' => [
             'class' => 'wdmg\media\Module',
             'routePrefix' => 'admin',
+            'mediaRoute' => '/media', // Routes to render media item (use "/" - for root)
+            'mediaCategoriesRoute' => '/media/categories', // Routes to render media categories (use "/" - for root)
+            'mediaPath' => '/uploads/media', // Path to save media files in @webroot
+            'mediaThumbsPath' => '/uploads/media/_thumbs', // Path to save media thumbnails in @webroot
+            'maxFilesToUpload' => 10, // maximum files to upload
+            'allowedMime' => [ // allowed mime types
+                'image/png' => true,
+                'image/jpeg' => true,
+                'image/gif' => true,
+                'image/svg+xml' => true,
+                'application/pdf' => true,
+                'application/msword' => true,
+                'application/vnd.ms-excel' => true,
+                'application/rtf' => true,
+                'text/csv' => true,
+                'text/plain' => true,
+                ...
+            ]
         ],
         ...
     ],
@@ -60,6 +78,6 @@ Use the `Module::dashboardNavItems()` method of the module to generate a navigat
     ?>
 
 # Status and version [in progress development]
+* v.1.0.1 - Check file not exists or generate unique filename
 * v.1.0.0 - CRUD for media items/categories, translations
 * v.0.0.3 - Upload functionality, mime types validator and preview thumbnails
-* v.0.0.2 - Migrations, base module and models

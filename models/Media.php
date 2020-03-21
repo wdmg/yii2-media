@@ -6,7 +6,9 @@ use Yii;
 use yii\db\Expression;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
+use yii\helpers\FileHelper;
 use yii\helpers\Json;
+use yii\imagine\Image;
 use yii\base\InvalidArgumentException;
 use yii\behaviors\TimestampBehavior;
 use yii\behaviors\BlameableBehavior;
@@ -462,27 +464,37 @@ class Media extends ActiveRecord
         $path = $this->getMediaPath();
 
         // Create the folder if not exist
-        if (\yii\helpers\FileHelper::createDirectory($basepath, $mode = 0775, $recursive = true)) {
+        if (FileHelper::createDirectory($basepath, $mode = 0775, $recursive = true)) {
 
             // Generate full path with year and month
             $savepath = $basepath . "/" . date('Y') . "/" . date('m');
             $fullpath = $path . "/" . date('Y') . "/" . date('m');
 
-            if (\yii\helpers\FileHelper::createDirectory($savepath, $mode = 0775, $recursive = true)) {
+            if (FileHelper::createDirectory($savepath, $mode = 0775, $recursive = true)) {
+
 
                 // Generate filename of media
                 $filename = $file->baseName . "." . $file->extension;
-                $savepath = $savepath . "/" . $filename;
-                $filepath = $fullpath . "/" . $filename;
+                $org_path = $savepath . "/" . $filename;
+                $web_path = $fullpath . "/" . $filename;
 
-                if ($file->saveAs($savepath)) {
+                // Check file not exists or generate unique filename
+                $i = 1;
+                while (file_exists($org_path) && $i < 999999) {
+                    $filename = $file->baseName . $file->baseName . "-$i" . "." . $file->extension;
+                    $org_path = $savepath . "/" . $filename;
+                    $web_path = $fullpath . "/" . $filename;
+                    $i++;
+                }
 
-                    $this->path = $filepath;
+                if ($file->saveAs($org_path)) {
+
+                    $this->path = $web_path;
 
                     if ($file->type)
                         $this->mime_type = $file->type;
                     else
-                        $this->mime_type = \yii\helpers\FileHelper::getMimeType($savepath);
+                        $this->mime_type = FileHelper::getMimeType($org_path);
 
                     $this->size = $file->size;
 
@@ -490,18 +502,13 @@ class Media extends ActiveRecord
                         if (isset($mime['type']) && in_array($file->extension, [
                                 'jpg', 'jpeg', 'gif', 'png', 'wbmp', 'xbm', 'webp', 'bmp'
                             ])) {
-
                             if ($mime['type'] == 'image') {
                                 $thumbpath = Yii::getAlias('@webroot') . $this->getMediaThumbsPath();
                                 if (\yii\helpers\FileHelper::createDirectory($thumbpath, $mode = 0775, $recursive = true)) {
                                     $thumbnail = $thumbpath . "/" . md5($this->path) . ".jpg";
-                                    \yii\imagine\Image::thumbnail($savepath, 480, 360)
-                                        ->save($thumbnail, [
-                                            'quality' => 75
-                                        ]);
+                                    Image::thumbnail($org_path, 480, 360)->save($thumbnail, ['quality' => 75]);
                                 }
                             }
-
                         }
                     }
 
@@ -558,10 +565,10 @@ class Media extends ActiveRecord
     public function delete()
     {
         if ($filename = $this->getSource(false, true))
-            @unlink($filename);
+            FileHelper::unlink($filename);
 
         if ($thumbnail = $this->getThumbnail(false, true))
-            @unlink($thumbnail);
+            FileHelper::unlink($thumbnail);
 
         return parent::delete();
     }

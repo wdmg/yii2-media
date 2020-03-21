@@ -179,6 +179,7 @@ class ListController extends Controller
         $model = new Media();
         if (Yii::$app->request->isPost) {
 
+            $saved = 0;
             $files = UploadedFile::getInstances($model, 'files');
             if (is_array($files)) {
                 foreach ($files as $file) {
@@ -194,14 +195,34 @@ class ListController extends Controller
                         if ($media->load(Yii::$app->request->post()) && $media->upload($file)) {
 
                             if ($media->validate()) {
-                                $media->save();
-                            }/* else {
-
-                            }*/
+                                if ($media->save())
+                                    $saved++;
+                            }
                         }
                     }
                 }
             }
+
+            if ($saved)
+                Yii::$app->getSession()->setFlash(
+                    'success',
+                    Yii::t(
+                        'app/modules/media',
+                        'OK! {count, number} media {count, plural, one{item} few{items} other{items}} successfully {count, plural, one{added} few{added} other{added}}.',
+                        [
+                            'count' => $saved
+                        ]
+                    )
+                );
+            else
+                Yii::$app->getSession()->setFlash(
+                    'danger',
+                    Yii::t(
+                        'app/modules/media',
+                        'An error occurred while added a media item(s).'
+                    )
+                );
+
         } else {
             return $this->render('upload', [
                 'model' => $model,
