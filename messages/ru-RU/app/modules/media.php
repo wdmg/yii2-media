@@ -34,8 +34,10 @@ return [
     'Updating media: {name}' => "Редактирование медиа: {name}",
     'View media' => "Просмотр медиа",
 
+    'Upload media' => "Загрузка медиа",
     'Preview' => "Превью",
     'Categories' => "Категории",
+    'Media categories' => "Медиа категории",
     'Categories of media' => "Категории медиа",
 
     '-- All categories --' => "-- Все категории --",
