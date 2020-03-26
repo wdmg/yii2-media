@@ -1,4 +1,4 @@
-[![Yii2](https://img.shields.io/badge/required-Yii2_v2.0.20-blue.svg)](https://packagist.org/packages/yiisoft/yii2)
+[![Yii2](https://img.shields.io/badge/required-Yii2_v2.0.33-blue.svg)](https://packagist.org/packages/yiisoft/yii2)
 [![Github all releases](https://img.shields.io/github/downloads/wdmg/yii2-media/total.svg)](https://GitHub.com/wdmg/yii2-media/releases/)
 ![Progress](https://img.shields.io/badge/progress-in_development-red.svg)
 [![GitHub license](https://img.shields.io/github/license/wdmg/yii2-media.svg)](https://github.com/wdmg/yii2-media/blob/master/LICENSE)
@@ -9,7 +9,7 @@ Media library for Yii2
 
 # Requirements 
 * PHP 5.6 or higher
-* Yii2 v.2.0.20 and newest
+* Yii2 v.2.0.33 and newest
 * [Yii2 Base](https://github.com/wdmg/yii2-base) module (required)
 * [Yii2 Imagine](https://github.com/yiisoft/yii2-imagine) extension (required)
 * [Yii2 SelectInput](https://github.com/wdmg/yii2-selectinput) widget
@@ -78,6 +78,7 @@ Use the `Module::dashboardNavItems()` method of the module to generate a navigat
     ?>
 
 # Status and version [in progress development]
+* v.1.0.2 - Added pagination, up to date dependencies
 * v.1.0.1 - Check file not exists or generate unique filename
 * v.1.0.0 - CRUD for media items/categories, translations
 * v.0.0.3 - Upload functionality, mime types validator and preview thumbnails

@@ -85,6 +85,11 @@ return [
     'Mime type' => "MIME тип",
     'Uploaded by' => "Загружено",
 
+    'First page' => 'Первая страница',
+    'Last page' => 'Последняя страница',
+    '&larr; Prev page' => '&larr; Предыдущая страница',
+    'Next page &rarr;' => 'Следующая страница &rarr;',
+
     'The value of field `{attribute}` must be a valid JSON, error: {error}.' => "Значение атрибута `{attribute}` должно быть валидным JSON, ошибка: {error}.",
     'Param attribute must be unique.' => "Параметр атрибута должен быть уникальным.",
     'It allowed only Latin alphabet, numbers and the «-», «_» characters.' => "Разрешена только латинница, цифры и «-», «_» символы.",

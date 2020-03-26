@@ -232,7 +232,22 @@ $this->params['breadcrumbs'][] = $this->title;
                         'class' => 'text-center'
                     ],
                 ]
-            ]
+            ],
+            'pager' => [
+                'options' => [
+                    'class' => 'pagination',
+                ],
+                'maxButtonCount' => 5,
+                'activePageCssClass' => 'active',
+                'prevPageCssClass' => '',
+                'nextPageCssClass' => '',
+                'firstPageCssClass' => 'previous',
+                'lastPageCssClass' => 'next',
+                'firstPageLabel' => Yii::t('app/modules/media', 'First page'),
+                'lastPageLabel'  => Yii::t('app/modules/media', 'Last page'),
+                'prevPageLabel'  => Yii::t('app/modules/media', '&larr; Prev page'),
+                'nextPageLabel'  => Yii::t('app/modules/media', 'Next page &rarr;')
+            ],
         ]); ?>
         <hr/>
         <div>

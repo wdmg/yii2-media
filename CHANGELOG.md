@@ -1,6 +1,10 @@
 Changelog
 =========
 
+## 1.0.2 (2020-03-27)
+ * Added pagination
+ * Up to date dependencies
+ 
 ## 1.0.1 (2020-03-21)
  * Check file not exists or generate unique filename
  * Update README.md
