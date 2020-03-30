@@ -127,6 +127,20 @@ class ListController extends Controller
                         Yii::$app->redirects->set('media', $oldMediaUrl, $newMediaUrl, 301);
                     }
 
+                    // Log activity
+                    if (
+                        class_exists('\wdmg\activity\models\Activity') &&
+                        $this->module->moduleLoaded('activity') &&
+                        isset(Yii::$app->activity)
+                    ) {
+                        Yii::$app->activity->set(
+                            'Media item `' . $model->name . '` with ID `' . $model->id . '` has been successfully updated.',
+                            $this->uniqueId . ":" . $this->action->id,
+                            'success',
+                            1
+                        );
+                    }
+
                     Yii::$app->getSession()->setFlash(
                         'success',
                         Yii::t(
@@ -138,6 +152,20 @@ class ListController extends Controller
                         )
                     );
                 } else {
+                    // Log activity
+                    if (
+                        class_exists('\wdmg\activity\models\Activity') &&
+                        $this->module->moduleLoaded('activity') &&
+                        isset(Yii::$app->activity)
+                    ) {
+                        Yii::$app->activity->set(
+                            'An error occurred while update the media item `' . $model->name . '` with ID `' . $model->id . '`.',
+                            $this->uniqueId . ":" . $this->action->id,
+                            'danger',
+                            1
+                        );
+                    }
+
                     Yii::$app->getSession()->setFlash(
                         'danger',
                         Yii::t(
@@ -203,7 +231,21 @@ class ListController extends Controller
                 }
             }
 
-            if ($saved)
+            if ($saved) {
+                // Log activity
+                if (
+                    class_exists('\wdmg\activity\models\Activity') &&
+                    $this->module->moduleLoaded('activity') &&
+                    isset(Yii::$app->activity)
+                ) {
+                    Yii::$app->activity->set(
+                        $saved . ' media item(s) successfully added.',
+                        $this->uniqueId . ":" . $this->action->id,
+                        'success',
+                        1
+                    );
+                }
+
                 Yii::$app->getSession()->setFlash(
                     'success',
                     Yii::t(
@@ -214,7 +256,21 @@ class ListController extends Controller
                         ]
                     )
                 );
-            else
+            } else {
+                // Log activity
+                if (
+                    class_exists('\wdmg\activity\models\Activity') &&
+                    $this->module->moduleLoaded('activity') &&
+                    isset(Yii::$app->activity)
+                ) {
+                    Yii::$app->activity->set(
+                        'An error occurred while added a media item(s)',
+                        $this->uniqueId . ":" . $this->action->id,
+                        'danger',
+                        1
+                    );
+                }
+
                 Yii::$app->getSession()->setFlash(
                     'danger',
                     Yii::t(
@@ -222,6 +278,7 @@ class ListController extends Controller
                         'An error occurred while added a media item(s).'
                     )
                 );
+            }
 
         } else {
             return $this->render('upload', [
@@ -247,7 +304,21 @@ class ListController extends Controller
                         $updated = Media::updateAll(['cat_id' => intval($value)], ['id' => $selection]);
                     }
 
-                    if ($updated)
+                    if ($updated) {
+                        // Log activity
+                        if (
+                            class_exists('\wdmg\activity\models\Activity') &&
+                            $this->module->moduleLoaded('activity') &&
+                            isset(Yii::$app->activity)
+                        ) {
+                            Yii::$app->activity->set(
+                                $updated . ' media item(s) successfully updated.',
+                                $this->uniqueId . ":" . $this->action->id,
+                                'success',
+                                1
+                            );
+                        }
+
                         Yii::$app->getSession()->setFlash(
                             'success',
                             Yii::t(
@@ -258,7 +329,21 @@ class ListController extends Controller
                                 ]
                             )
                         );
-                    else
+                    } else {
+                        // Log activity
+                        if (
+                            class_exists('\wdmg\activity\models\Activity') &&
+                            $this->module->moduleLoaded('activity') &&
+                            isset(Yii::$app->activity)
+                        ) {
+                            Yii::$app->activity->set(
+                                'An error occurred while updating a media item(s).',
+                                $this->uniqueId . ":" . $this->action->id,
+                                'danger',
+                                1
+                            );
+                        }
+
                         Yii::$app->getSession()->setFlash(
                             'danger',
                             Yii::t(
@@ -266,6 +351,7 @@ class ListController extends Controller
                                 'An error occurred while updating a media item(s).'
                             )
                         );
+                    }
 
                 } elseif ($action == 'delete') {
 
@@ -276,7 +362,21 @@ class ListController extends Controller
                             $deleted++;
                     }
 
-                    if ($deleted)
+                    if ($deleted) {
+                        // Log activity
+                        if (
+                            class_exists('\wdmg\activity\models\Activity') &&
+                            $this->module->moduleLoaded('activity') &&
+                            isset(Yii::$app->activity)
+                        ) {
+                            Yii::$app->activity->set(
+                                $deleted . ' media item(s) successfully deleted.',
+                                $this->uniqueId . ":" . $this->action->id,
+                                'success',
+                                1
+                            );
+                        }
+
                         Yii::$app->getSession()->setFlash(
                             'success',
                             Yii::t(
@@ -287,7 +387,21 @@ class ListController extends Controller
                                 ]
                             )
                         );
-                    else
+                    } else {
+                        // Log activity
+                        if (
+                            class_exists('\wdmg\activity\models\Activity') &&
+                            $this->module->moduleLoaded('activity') &&
+                            isset(Yii::$app->activity)
+                        ) {
+                            Yii::$app->activity->set(
+                                'An error occurred while deleting a media item(s).',
+                                $this->uniqueId . ":" . $this->action->id,
+                                'danger',
+                                1
+                            );
+                        }
+
                         Yii::$app->getSession()->setFlash(
                             'danger',
                             Yii::t(
@@ -295,6 +409,7 @@ class ListController extends Controller
                                 'An error occurred while deleting a media item(s).'
                             )
                         );
+                    }
                 }
             }
         }
@@ -317,6 +432,20 @@ class ListController extends Controller
 
             // @TODO: remove redirects of deleted pages
 
+            // Log activity
+            if (
+                class_exists('\wdmg\activity\models\Activity') &&
+                $this->module->moduleLoaded('activity') &&
+                isset(Yii::$app->activity)
+            ) {
+                Yii::$app->activity->set(
+                    'Media item `' . $model->name . '` with ID `' . $model->id . '` has been successfully deleted.',
+                    $this->uniqueId . ":" . $this->action->id,
+                    'success',
+                    1
+                );
+            }
+
             Yii::$app->getSession()->setFlash(
                 'success',
                 Yii::t(
@@ -328,6 +457,20 @@ class ListController extends Controller
                 )
             );
         } else {
+            // Log activity
+            if (
+                class_exists('\wdmg\activity\models\Activity') &&
+                $this->module->moduleLoaded('activity') &&
+                isset(Yii::$app->activity)
+            ) {
+                Yii::$app->activity->set(
+                    'An error occurred while deleting the media item `' . $model->name . '` with ID `' . $model->id . '`.',
+                    $this->uniqueId . ":" . $this->action->id,
+                    'danger',
+                    1
+                );
+            }
+
             Yii::$app->getSession()->setFlash(
                 'danger',
                 Yii::t(

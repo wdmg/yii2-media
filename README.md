@@ -78,6 +78,7 @@ Use the `Module::dashboardNavItems()` method of the module to generate a navigat
     ?>
 
 # Status and version [in progress development]
+* v.1.0.3 - Log activity
 * v.1.0.2 - Added pagination, up to date dependencies
 * v.1.0.1 - Check file not exists or generate unique filename
 * v.1.0.0 - CRUD for media items/categories, translations
