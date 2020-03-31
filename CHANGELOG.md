@@ -1,7 +1,8 @@
 Changelog
 =========
 
-## 1.0.3 (2020-03-30)
+## 1.0.3 (2020-03-31)
+ * Refactoring log of activity
  * Log activity
 
 ## 1.0.2 (2020-03-27)
