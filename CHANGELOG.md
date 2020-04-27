@@ -1,6 +1,11 @@
 Changelog
 =========
 
+## 1.0.4 (2020-04-28)
+ * Update README.md and dependencies
+ * Updating year in copyrights
+ * Change icon class (FontAwesome update)
+ 
 ## 1.0.3 (2020-03-31)
  * Refactoring log of activity
  * Log activity
