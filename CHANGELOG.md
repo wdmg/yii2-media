@@ -2,6 +2,7 @@ Changelog
 =========
 
 ## 1.0.4 (2020-04-28)
+ * Added drag`n`drop for upload
  * Update README.md and dependencies
  * Updating year in copyrights
  * Change icon class (FontAwesome update)

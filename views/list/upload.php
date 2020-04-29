@@ -9,6 +9,7 @@ use wdmg\widgets\SelectInput;
 /* @var $model wdmg\media\models\Media */
 /* @var $form yii\widgets\ActiveForm */
 
+\wdmg\media\FontAwesomeAssets::register($this);
 $bundle = \wdmg\media\MediaAsset::register($this);
 
 $this->title = Yii::t('app/modules/media', 'Upload media');
@@ -28,6 +29,13 @@ $this->params['breadcrumbs'][] = Yii::t('app/modules/media', 'Upload');
             'enctype' => 'multipart/form-data'
         ]
     ]); ?>
+
+    <?= $form->field($model, 'files[]', [
+        'options' => [
+            'class' => "upload-wrapper"
+        ]
+    ])->fileInput(['multiple' => true]) ?>
+
     <?= $form->field($model, 'cat_id')->widget(SelectInput::class, [
         'model' => $model,
         'attribute' => 'cat_id',
@@ -36,11 +44,9 @@ $this->params['breadcrumbs'][] = Yii::t('app/modules/media', 'Upload');
             'class' => 'form-control'
         ]
     ])->label(Yii::t('app/modules/media', 'Category')); ?>
-    <?= $form->field($model, 'files[]')->fileInput(['multiple' => true]) ?>
     <hr/>
     <div class="form-group">
         <?= Html::a(Yii::t('app/modules/media', '&larr; Back to list'), ['list/index'], ['class' => 'btn btn-default pull-left']) ?>&nbsp;
-        <?= Html::submitButton(Yii::t('app/modules/media', 'Upload'), ['class' => 'btn btn-success pull-right']) ?>
     </div>
     <?php ActiveForm::end(); ?>
 </div>

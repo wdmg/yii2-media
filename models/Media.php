@@ -105,7 +105,7 @@ class Media extends ActiveRecord
     {
         $rules = [
             [['name', 'alias', 'cat_id', 'path'], 'required'],
-            [['name', 'alias', 'mime_type'], 'string', 'min' => 3, 'max' => 128],
+            [['name', 'alias', 'mime_type'], 'string', 'min' => 2, 'max' => 128],
             [['path', 'title', 'alt', 'reference'], 'string', 'max' => 255],
             [['caption'], 'string', 'max' => 550],
             [['description'], 'string'],

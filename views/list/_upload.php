@@ -8,7 +8,7 @@ use wdmg\widgets\SelectInput;
 /* @var $this yii\web\View */
 /* @var $model wdmg\media\models\Media */
 
-\yii\web\YiiAsset::register($this);
+\wdmg\media\FontAwesomeAssets::register($this);
 
 ?>
 <div class="media-upload">
@@ -18,8 +18,20 @@ use wdmg\widgets\SelectInput;
         'method' => 'post',
         'options' => [
             'enctype' => 'multipart/form-data'
-        ]
+        ],
+        /*'fieldConfig' => function ($model, $attribute) {
+            if ($attribute == "files[]") {
+                return ['options' => ['class' => 'form-group lead']];
+            }
+        }*/
     ]); ?>
+
+    <?= $form->field($model, 'files[]', [
+        'options' => [
+            'class' => "upload-wrapper"
+        ]
+    ])->fileInput(['multiple' => true]) ?>
+
     <?= $form->field($model, 'cat_id')->widget(SelectInput::class, [
         'model' => $model,
         'attribute' => 'cat_id',
@@ -28,14 +40,12 @@ use wdmg\widgets\SelectInput;
             'class' => 'form-control'
         ]
     ])->label(Yii::t('app/modules/media', 'Category')); ?>
-    <?= $form->field($model, 'files[]')->fileInput(['multiple' => true]) ?>
     <div class="row">
         <div class="modal-footer" style="clear:both;display:inline-block;width:100%;padding-bottom:0;">
             <?= Html::a(Yii::t('app/modules/media', 'Close'), "#", [
-                'class' => 'btn btn-default pull-left',
+                'class' => 'btn btn-danger pull-right',
                 'data-dismiss' => 'modal'
             ]) ?>
-            <?= Html::submitButton(Yii::t('app/modules/media', 'Upload'), ['class' => 'btn btn-success pull-right']) ?>
         </div>
     </div>
     <?php ActiveForm::end(); ?>

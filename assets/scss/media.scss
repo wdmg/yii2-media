@@ -1,0 +1,164 @@
+.icon {
+  &.icon-filetype {
+    display: inline-block;
+    float: left;
+    width: 64px;
+    height: 48px;
+    margin-top: 5px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    &.icon-sm {
+      margin-top: 2px;
+      width: 32px;
+      height: 24px;
+    }
+    &.icon-lg {
+      margin-top: 8px;
+      width: 96px;
+      height: 72px;
+    }
+    &.icon-image-bmp { background-image: url('../images/image-bmp.png'); }
+    &.icon-image-gif { background-image: url('../images/image-gif.png'); }
+    &.icon-image-jpeg { background-image: url('../images/image-jpeg.png'); }
+    &.icon-image-png { background-image: url('../images/image-png.png'); }
+    &.icon-image-svg { background-image: url('../images/image-svg.png'); }
+    &.icon-image-tiff { background-image: url('../images/image-tiff.png'); }
+    &.icon-image-webp { background-image: url('../images/image-webp.png'); }
+
+    &.icon-video-avi { background-image: url('../images/video-avi.png'); }
+    &.icon-video-mkv { background-image: url('../images/video-mkv.png'); }
+    &.icon-video-mov { background-image: url('../images/video-mov.png'); }
+    &.icon-video-mp4 { background-image: url('../images/video-mp4.png'); }
+    &.icon-video-mpeg { background-image: url('../images/video-mpeg.png'); }
+    &.icon-video-ogv { background-image: url('../images/video-ogv.png'); }
+    &.icon-video-webm { background-image: url('../images/video-webm.png'); }
+    &.icon-video-wmv { background-image: url('../images/video-wmv.png'); }
+
+    &.icon-audio-aac { background-image: url('../images/audio-aac.png'); }
+    &.icon-audio-mka { background-image: url('../images/audio-mka.png'); }
+    &.icon-audio-mp3 { background-image: url('../images/audio-mp3.png'); }
+    &.icon-audio-mp4 { background-image: url('../images/audio-mp4.png'); }
+    &.icon-audio-ogg { background-image: url('../images/audio-ogg.png'); }
+    &.icon-audio-rm { background-image: url('../images/audio-rm.png'); }
+    &.icon-audio-wav { background-image: url('../images/audio-wav.png'); }
+    &.icon-audio-weba { background-image: url('../images/audio-weba.png'); }
+    &.icon-audio-wma { background-image: url('../images/audio-wma.png'); }
+
+    &.icon-document-csv { background-image: url('../images/document-csv.png'); }
+    &.icon-document-doc { background-image: url('../images/document-doc.png'); }
+    &.icon-document-json { background-image: url('../images/document-json.png'); }
+    &.icon-document-odf { background-image: url('../images/document-odf.png'); }
+    &.icon-document-odp { background-image: url('../images/document-odp.png'); }
+    &.icon-document-ods { background-image: url('../images/document-ods.png'); }
+    &.icon-document-pdf { background-image: url('../images/document-pdf.png'); }
+    &.icon-document-ppt { background-image: url('../images/document-ppt.png'); }
+    &.icon-document-rtf { background-image: url('../images/document-rtf.png'); }
+    &.icon-document-txt { background-image: url('../images/document-txt.png'); }
+    &.icon-document-xls { background-image: url('../images/document-xls.png'); }
+
+    &.icon-unknown { background-image: url('../images/unknown.png'); }
+  }
+}
+
+.upload-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 180px;
+  align-items: center;
+  align-content: center;
+  padding: 15px;
+  border: 2px dashed #c7c7c7;
+  background: #ffffff;
+  margin-bottom: 15px;
+  label {
+    display: inline-flex;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: auto;
+    margin-bottom: auto;
+    flex-direction: column;
+    align-items: center;
+    &:before {
+      display: inline-flex;
+      margin-left: 0;
+      margin-right: 0;
+      content: "\f382";
+      font-family: "Font Awesome 5 Free";
+      -moz-osx-font-smoothing: grayscale;
+      -webkit-font-smoothing: antialiased;
+      font-size: 4rem;
+      font-weight: 900;
+      font-style: normal;
+      font-variant: normal;
+      text-rendering: auto;
+      line-height: 1;
+    }
+    &:after {
+      display: inline-flex;
+      margin-left: 0;
+      margin-right: 0;
+      content: "Drag and drop a files here or click";
+      color: #c7c7c7;
+      font-weight: normal;
+      font-size: 2rem;
+    }
+  }
+  input[type="file"] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 5;
+  }
+  .help-block {
+    display: inline-flex;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: auto;
+    margin-bottom: 0px;
+    &:empty {
+      display: none;
+    }
+  }
+  &:hover {
+    background: #f7f7f7;
+  }
+  &.has-drag {
+    border-color: #1786DB;
+    label {
+      color: #1786DB;
+    }
+    background: rgba(#1786DB, 0.05);
+    &:hover {
+      background: rgba(#1786DB, 0.05);
+    }
+  }
+  &.has-success {
+    border-color: #3c763d;
+    label {
+      color: #3c763d;
+    }
+    background: rgba(#3c763d, 0.05);
+    &:hover {
+      background: rgba(#3c763d, 0.05);
+    }
+  }
+  &.has-error {
+    border-color: #a94442;
+    label {
+      color: #a94442;
+    }
+    background: rgba(#a94442, 0.05);
+    &:hover {
+      background: rgba(#a94442, 0.05);
+    }
+  }
+}

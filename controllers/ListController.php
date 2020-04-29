@@ -36,6 +36,7 @@ class ListController extends Controller
                 'class' => VerbFilter::class,
                 'actions' => [
                     'delete' => ['POST'],
+                    'upload' => ['GET', 'POST'],
                     'batch' => ['POST'],
                 ],
             ],
@@ -193,10 +194,12 @@ class ListController extends Controller
     public function actionUpload()
     {
         $model = new Media();
-        if (Yii::$app->request->isPost) {
+        if (Yii::$app->request->isPost || Yii::$app->request->isAjax) {
 
             $saved = 0;
+            $response = [];
             $files = UploadedFile::getInstances($model, 'files');
+
             if (is_array($files)) {
                 foreach ($files as $file) {
                     if ($file->error == 0) {
@@ -209,17 +212,22 @@ class ListController extends Controller
                             $media->cat_id = Categories::DEFAULT_CATEGORY_ID;
 
                         if ($media->load(Yii::$app->request->post()) && $media->upload($file)) {
-
                             if ($media->validate()) {
-                                if ($media->save())
+                                if ($media->save()) {
+                                    $response[$file->name]['status'] = true;
                                     $saved++;
+                                }
+                            } else {
+                                $response[$file->name]['status'] = false;
                             }
                         }
                     }
                 }
             }
 
-            if ($saved) {
+            if (Yii::$app->request->isAjax) {
+                return $this->asJson($response);
+            } elseif ($saved) {
                 // Log activity
                 $this->module->logActivity(
                     $saved . ' media item(s) successfully added.',
