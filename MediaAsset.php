@@ -7,10 +7,6 @@ class MediaAsset extends AssetBundle
 {
     public $sourcePath = '@vendor/wdmg/yii2-media/assets';
 
-    public $publishOptions = [
-        'forceCopy' => true
-    ];
-
     public $css = [
         YII_ENV_DEV ? 'css/media.css' : 'css/media.min.css'
     ];
