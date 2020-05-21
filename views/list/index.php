@@ -19,7 +19,6 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?> <small class="text-muted pull-right">[v.<?= $this->context->module->version ?>]</small></h1>
 </div>
     <div class="media-list-index">
-
         <?php Pjax::begin([
             'id' => "pageContainer"
         ]); ?>
@@ -221,7 +220,6 @@ $this->params['breadcrumbs'][] = $this->title;
                         return $output;
                     }
                 ],
-
                 [
                     'class' => 'yii\grid\ActionColumn',
                     'header' => Yii::t('app/modules/media','Actions'),
@@ -263,9 +261,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 ]) ?>
                 <ul class="dropdown-menu">
                     <?php
-                        $categories = $model->getStatusesList(false);
-                        if ($categories) {
-                            foreach ($categories as $key => $name) {
+                        if ($statuses = $model->getStatusesList(false)) {
+                            foreach ($statuses as $key => $name) {
                                 echo "<li>" . Html::a(Yii::t('app/modules/media', 'Change status to: {name}', [
                                         'name' => $name
                                     ]), [
@@ -283,8 +280,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     ?>
                     <li role="separator" class="divider"></li>
                     <?php
-                        $categories = $model->getAllCategoriesList(false);
-                        if ($categories) {
+                        if ($categories = $model->getAllCategoriesList(false)) {
                             foreach ($categories as $key => $name) {
                                 echo "<li>" . Html::a(Yii::t('app/modules/media', 'Change category to: {name}', [
                                         'name' => $name
