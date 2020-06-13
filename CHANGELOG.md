@@ -1,6 +1,9 @@
 Changelog
 =========
 
+## 1.0.5 (2020-06-14)
+ * Update README.md
+ 
 ## 1.0.4 (2020-04-28)
  * Added drag`n`drop for upload
  * Update README.md and dependencies
