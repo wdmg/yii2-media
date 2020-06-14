@@ -9,7 +9,7 @@
 # Yii2 Media
 Media library for Yii2 with media categories and drag'n'drop uploader.
 
-This module is an integral part of the [Butterfly.SMS](https://butterflycms.com/) content management system, but can also be used as an standalone extension.
+This module is an integral part of the [Butterfly.СMS](https://butterflycms.com/) content management system, but can also be used as an standalone extension.
 
 Copyrights (c) 2019-2020 [W.D.M.Group, Ukraine](https://wdmg.com.ua/)
 
