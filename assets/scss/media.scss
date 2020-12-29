@@ -100,7 +100,8 @@
       display: inline-flex;
       margin-left: 0;
       margin-right: 0;
-      content: "Drag and drop a files here or click";
+      content: "Drag and drop a files here or click for select";
+      content: attr(data-label);
       color: #c7c7c7;
       font-weight: normal;
       font-size: 2rem;

@@ -2,6 +2,7 @@
 
 namespace wdmg\media\controllers;
 
+use wdmg\helpers\StringHelper;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\helpers\FileHelper;
@@ -193,17 +194,18 @@ class ListController extends Controller
 
     public function actionUpload()
     {
+
         $model = new Media();
         if (Yii::$app->request->isPost || Yii::$app->request->isAjax) {
 
             $saved = 0;
+            $post = Yii::$app->request->post();
             $response = [];
             $files = UploadedFile::getInstances($model, 'files');
 
-            if (is_array($files)) {
+            if (!empty($files)) {
                 foreach ($files as $file) {
                     if ($file->error == 0) {
-
                         $media = new Media();
                         if (is_null($media->name))
                             $media->name = $file->baseName;
@@ -211,23 +213,29 @@ class ListController extends Controller
                         if (is_null($media->cat_id))
                             $media->cat_id = Categories::DEFAULT_CATEGORY_ID;
 
-                        if ($media->load(Yii::$app->request->post()) && $media->upload($file)) {
-                            if ($media->validate()) {
+                        if ($media->load(Yii::$app->request->post())) {
+                            if ($media->upload($file)) {
                                 if ($media->save()) {
                                     $response[$file->name]['status'] = true;
                                     $saved++;
+                                    continue;
                                 }
-                            } else {
-                                $response[$file->name]['status'] = false;
                             }
+                            $response[$file->name] = [
+                                'status' => false,
+                                'errors' => $media->errors,
+                            ];
                         }
+                    } else {
+                        $response[$file->name] = [
+                            'status' => false,
+                            'errors' => $file->error,
+                        ];
                     }
                 }
             }
 
-            if (Yii::$app->request->isAjax) {
-                return $this->asJson($response);
-            } elseif ($saved) {
+            if ($saved) {
                 // Log activity
                 $this->module->logActivity(
                     $saved . ' media item(s) successfully added.',
@@ -264,9 +272,13 @@ class ListController extends Controller
                 );
             }
 
+            if (Yii::$app->request->isAjax) {
+                return $this->asJson($response);
+            }
+
         } else {
             return $this->render('upload', [
-                'model' => $model,
+                'model' => $model
             ]);
         }
 

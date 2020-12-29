@@ -14,6 +14,7 @@ namespace wdmg\media;
  *
  */
 
+use wdmg\helpers\StringHelper;
 use Yii;
 use wdmg\base\BaseModule;
 
@@ -71,6 +72,11 @@ class Module extends BaseModule
      * @var int, maximum files to upload
      */
     public $maxFilesToUpload = 10;
+
+    /**
+     * @var int, max file size in bytes to upload
+     */
+    public $maxUploadSize = 5242880;
 
     /**
      * @var array, allowed mime types
@@ -417,14 +423,6 @@ class Module extends BaseModule
         return $items;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function bootstrap($app)
-    {
-        parent::bootstrap($app);
-    }
-
     public function getAllowedMime($asArray = true)
     {
         $list = [];
@@ -506,6 +504,39 @@ class Module extends BaseModule
         }
 
         return null;
+    }
+
+    /**
+     * Returns the allowed maximum size of uploaded files.
+     *
+     * @param bool $formatted
+     * @return int, size in bytes
+     */
+    public function getMaxUploadLimit($formatted = false)
+    {
+        $max_file_size = null;
+        if (!$this->isConsole() && Yii::$app->request->isPost)
+            $max_file_size = (int)Yii::$app->request->post('MAX_FILE_SIZE');
+
+        $max_upload_limit = StringHelper::sizeToBytes(\ini_get('upload_max_filesize'));
+        $max_post_limit = StringHelper::sizeToBytes(\ini_get('post_max_size'));
+
+        if ($max_upload_limit > $max_post_limit)
+            Yii::warning('PHP.ini\'s \'post_max_size\' is less than \'upload_max_filesize\'.', __METHOD__);
+
+        if (isset($max_post_limit) && $max_post_limit < $max_upload_limit && $max_post_limit > 0)
+            $limit = $max_post_limit;
+
+        if (isset($this->maxUploadSize) && $this->maxUploadSize < $limit && $this->maxUploadSize > 0)
+            $limit = $this->maxUploadSize;
+
+        if (isset($max_file_size) && $max_file_size < $limit && $max_file_size > 0)
+            $limit = $max_file_size;
+
+        if ($formatted)
+            return \Yii::$app->formatter->asShortSize($limit);
+
+        return $limit;
     }
 
     /**

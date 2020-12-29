@@ -81,6 +81,17 @@ $(function() {
         $progressBar.css('width', parseInt(value) + '%');
     }
 
+    function createRequestObject() {
+        var http;
+        if (navigator.appName == "Microsoft Internet Explorer") {
+            http = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        else {
+            http = new XMLHttpRequest();
+        }
+        return http;
+    }
+
     function uploadData(form, name, file, index) {
 
         var url = window.location.href;
@@ -97,27 +108,33 @@ $(function() {
 
         if (url && method && form && formData && name && file) {
 
-            var xhr = new XMLHttpRequest();
+
+            var xhr = new createRequestObject();
             xhr.open(method, url, true);
             xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
             xhr.setRequestHeader('Accept', 'application/json');
+
             xhr.upload.addEventListener("progress", function(e) {
-                updateProgress(file.name, (e.loaded * 100.0 / e.total) || 100, 'process');
-            });
+                if (e.lengthComputable) {
+                    if (e.loaded < e.total) {
+                        updateProgress(file.name, (((e.loaded / e.total) * 100).toFixed(1)) || 100, 'process');
+                    } else {
+                        updateProgress(file.name, 100, 'success');
+                    }
+                }
+            } , false);
 
             xhr.addEventListener('readystatechange', function(e) {
                 if (xhr.readyState == 4 && xhr.status == 200) {
-
                     var response = JSON.parse(xhr.responseText);
-                    if (response[file.name].status)
-                        updateProgress(file.name, 100, 'success');
-                    else
+                    if (typeof response[file.name] == "object") {
+                        if (response[file.name].status == true)
+                            updateProgress(file.name, 100, 'success');
+                    } else {
                         updateProgress(file.name, 100, 'error');
-
-                    //console.log('XMLHttpRequest Success!');
+                    }
                 } else if (xhr.readyState == 4 && xhr.status != 200) {
                     updateProgress(file.name, 100, 'error');
-                    //console.error('XMLHttpRequest Error!');
                 }
             });
 
@@ -131,6 +148,10 @@ $(function() {
                 formData.set(name, file);
             } else {
                 formData.append(name, file);
+            }
+
+            if (typeof checkProgress !== "undefined") {
+                clearInterval(checkProgress);
             }
 
             return xhr.send(formData);

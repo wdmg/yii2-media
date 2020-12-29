@@ -51,6 +51,7 @@ To add a module to the project, add the following data in your configuration fil
             'mediaPath' => '/uploads/media', // Path to save media files in @webroot
             'mediaThumbsPath' => '/uploads/media/_thumbs', // Path to save media thumbnails in @webroot
             'maxFilesToUpload' => 10, // maximum files to upload
+            'maxUploadSize' => 5242880, // max file size in bytes to upload
             'allowedMime' => [ // allowed mime types
                 'image/png' => true,
                 'image/jpeg' => true,
@@ -85,7 +86,7 @@ Use the `Module::dashboardNavItems()` method of the module to generate a navigat
 
 # Status and version [ready to use]
 * v.1.0.5 - Update README.md
-* v.1.0.4 - Added drag`n`drop for upload
+* v.1.0.4 - Added drag-n-drop for upload
 * v.1.0.3 - Log activity
 * v.1.0.2 - Added pagination, up to date dependencies
 * v.1.0.1 - Check file not exists or generate unique filename

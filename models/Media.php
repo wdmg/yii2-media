@@ -111,7 +111,12 @@ class Media extends ActiveRecord
             [['description'], 'string'],
             [['mime_type'], 'in', 'range' => $this->module->getAllowedMime()],
             [['cat_id', 'size'], 'integer'],
-            [['files'], 'file', 'skipOnEmpty' => true, 'maxFiles' => $this->module->maxFilesToUpload, 'extensions' => $this->module->getAllowedExtensions(false), 'checkExtensionByMimeType' => false],
+            [['files'], 'file', 'skipOnEmpty' => true,
+                'maxFiles' => $this->module->maxFilesToUpload,
+                'maxSize' => $this->module->getMaxUploadLimit(false),
+                'extensions' => $this->module->getAllowedExtensions(false),
+                'checkExtensionByMimeType' => false
+            ],
             [['params'], JsonValidator::class, 'message' => Yii::t('app/modules/media', 'The value of field `{attribute}` must be a valid JSON, error: {error}.')],
             [['status'], 'boolean'],
             ['alias', 'unique', 'message' => Yii::t('app/modules/media', 'Param attribute must be unique.')],
@@ -487,38 +492,34 @@ class Media extends ActiveRecord
                     $i++;
                 }
 
-                if ($file->saveAs($org_path)) {
+                $this->path = $web_path;
 
-                    $this->path = $web_path;
+                if ($file->type)
+                    $this->mime_type = $file->type;
+                else
+                    $this->mime_type = FileHelper::getMimeType($org_path);
 
-                    if ($file->type)
-                        $this->mime_type = $file->type;
-                    else
-                        $this->mime_type = FileHelper::getMimeType($org_path);
+                $this->size = $file->size;
 
-                    $this->size = $file->size;
+                if ($this->validate()) {
+                    if ($file->saveAs($org_path)) {
 
-                    if ($mime = $this->module->getTypeByMime($this->mime_type)) {
-                        if (isset($mime['type']) && in_array($file->extension, [
-                                'jpg', 'jpeg', 'gif', 'png', 'wbmp', 'xbm', 'webp', 'bmp'
-                            ])) {
-                            if ($mime['type'] == 'image') {
-                                $thumbpath = Yii::getAlias('@webroot') . $this->getMediaThumbsPath();
-                                if (\yii\helpers\FileHelper::createDirectory($thumbpath, $mode = 0775, $recursive = true)) {
-                                    $thumbnail = $thumbpath . "/" . md5($this->path) . ".jpg";
-                                    Image::thumbnail($org_path, 480, 360)->save($thumbnail, ['quality' => 75]);
+                        if ($mime = $this->module->getTypeByMime($this->mime_type)) {
+                            if (isset($mime['type']) && in_array($file->extension, [
+                                    'jpg', 'jpeg', 'gif', 'png', 'wbmp', 'xbm', 'webp', 'bmp'
+                                ])) {
+                                if ($mime['type'] == 'image') {
+                                    $thumbpath = Yii::getAlias('@webroot') . $this->getMediaThumbsPath();
+                                    if (\yii\helpers\FileHelper::createDirectory($thumbpath, $mode = 0775, $recursive = true)) {
+                                        $thumbnail = $thumbpath . "/" . md5($this->path) . ".jpg";
+                                        Image::thumbnail($org_path, 480, 360)->save($thumbnail, ['quality' => 75]);
+                                    }
                                 }
                             }
                         }
+
+                        return $filename;
                     }
-
-                    /*$media->params = Json::encode([
-                        'type' => $file->type,
-                        'extension' => $file->extension,
-                        'size' => $file->size
-                    ]);*/
-
-                    return $filename;
                 }
             }
         }
@@ -560,6 +561,21 @@ class Media extends ActiveRecord
         } else {
             return $thumbnail;
         }
+    }
+
+    /**
+     * Returns the allowed maximum size of uploaded files.
+     *
+     * @param bool $formatted
+     * @return int|string|null
+     */
+    public function getMaxUploadFilesize($formatted = false)
+    {
+        $limit = $this->module->getMaxUploadLimit();
+        if ($formatted)
+            return \Yii::$app->formatter->asShortSize($limit);
+
+        return $limit;
     }
 
     public function delete()

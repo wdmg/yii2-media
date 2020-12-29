@@ -18,19 +18,24 @@ use wdmg\widgets\SelectInput;
         'method' => 'post',
         'options' => [
             'enctype' => 'multipart/form-data'
-        ],
-        /*'fieldConfig' => function ($model, $attribute) {
-            if ($attribute == "files[]") {
-                return ['options' => ['class' => 'form-group lead']];
-            }
-        }*/
+        ]
     ]); ?>
 
     <?= $form->field($model, 'files[]', [
         'options' => [
             'class' => "upload-wrapper"
         ]
+    ])->label(Yii::t('app/modules/media', 'Select files'), [
+        'data' => [
+            'label' => Yii::t('app/modules/media', 'Drag and drop a files here or click for select')
+        ]
     ])->fileInput(['multiple' => true]) ?>
+
+    <p class="alert alert-info">
+        <?= Yii::t('app/modules/media', 'Maximum upload file size: {size}.', [
+            'size' => $model->getMaxUploadFilesize(true)
+        ]); ?>
+    </p>
 
     <?= $form->field($model, 'cat_id')->widget(SelectInput::class, [
         'model' => $model,

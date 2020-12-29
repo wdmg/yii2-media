@@ -35,6 +35,10 @@ return [
     'View media' => "Просмотр медиа",
 
     'Upload media' => "Загрузка медиа",
+    'Select files' => "Выберите файлы",
+    'Your server is not capable of displaying file upload progress.' => "Ваш сервер не может отображать прогресс загрузки файлов.",
+    'Drag and drop a files here or click for select' => "Перетащите файлы сюда или кликните для выбора",
+    'Maximum upload file size: {size}.' => "Максимальный размер загружаемого файла: {size}.",
     'Preview' => "Превью",
     'Categories' => "Категории",
     'Media categories' => "Медиа категории",

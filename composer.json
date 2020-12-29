@@ -41,6 +41,7 @@
       "mediaPath": "/uploads/media",
       "mediaThumbsPath": "/uploads/media/_thumbs",
       "maxFilesToUpload": 10,
+      "maxUploadSize": 5242880,
       "allowedMime": {
         "image/png": true,
         "image/jpeg": true,

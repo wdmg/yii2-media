@@ -34,7 +34,17 @@ $this->params['breadcrumbs'][] = Yii::t('app/modules/media', 'Upload');
         'options' => [
             'class' => "upload-wrapper"
         ]
+    ])->label(Yii::t('app/modules/media', 'Select files'), [
+        'data' => [
+            'label' => Yii::t('app/modules/media', 'Drag and drop a files here or click for select')
+        ]
     ])->fileInput(['multiple' => true]) ?>
+
+    <p class="alert alert-info">
+        <?= Yii::t('app/modules/media', 'Maximum upload file size: {size}.', [
+            'size' => $model->getMaxUploadFilesize(true)
+        ]); ?>
+    </p>
 
     <?= $form->field($model, 'cat_id')->widget(SelectInput::class, [
         'model' => $model,
