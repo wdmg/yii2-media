@@ -563,6 +563,24 @@ class Media extends ActiveRecord
         }
     }
 
+    public function getExifData() {
+        if (in_array($this->mime_type, ['image/jpeg', 'image/tiff'])) {
+            if (($path = $this->getSource(false, true)) && $this->id) {
+                if ($exif = exif_read_data($path, 0, true)) {
+                    $data = [];
+                    foreach ($exif as $key => $section) {
+                        foreach ($section as $name => $val) {
+                            $attribute = $key.$name;
+                            $data[$attribute] = $val;
+                        }
+                    }
+                    return $data;
+                }
+            }
+        }
+        return false;
+    }
+
     /**
      * Returns the allowed maximum size of uploaded files.
      *

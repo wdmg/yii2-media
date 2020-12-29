@@ -219,6 +219,12 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ],
     ]); ?>
+    <?php if ($exif = $model->getExifData()) : ?>
+    <h3><?= Yii::t('app/modules/media', 'EXIF Data'); ?></h3>
+    <?= DetailView::widget([
+            'model' => $exif
+        ]);
+    endif; ?>
     <hr/>
     <div class="form-group">
         <?= Html::a(Yii::t('app/modules/media', '&larr; Back to list'), ['list/index'], ['class' => 'btn btn-default pull-left']) ?>&nbsp;

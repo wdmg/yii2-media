@@ -89,6 +89,8 @@ return [
     'Mime type' => "MIME тип",
     'Uploaded by' => "Загружено",
 
+    'EXIF Data' => "EXIF-данные",
+
     'First page' => 'Первая страница',
     'Last page' => 'Последняя страница',
     '&larr; Prev page' => '&larr; Предыдущая страница',
