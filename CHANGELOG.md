@@ -1,7 +1,8 @@
 Changelog
 =========
 
-## 1.0.*
+## 1.0.6 (2021-01-02)
+ * RBAC implementation
  * Read EXIF data
  * Maximum upload file size
  

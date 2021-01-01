@@ -229,6 +229,28 @@ $this->params['breadcrumbs'][] = $this->title;
                     'contentOptions' => [
                         'class' => 'text-center'
                     ],
+                    'visibleButtons' => [
+                        'update' => function ($model) {
+                            if (Yii::$app->authManager && $this->context->module->moduleExist('rbac') && !Yii::$app->user->can('updatePosts', [
+                                    'created_by' => $data->created_by,
+                                    'updated_by' => $data->updated_by
+                                ])) {
+                                return false;
+                            }
+
+                            return true;
+                        },
+                        'delete' => function ($model) {
+                            if (Yii::$app->authManager && $this->context->module->moduleExist('rbac') && !Yii::$app->user->can('updatePosts', [
+                                    'created_by' => $data->created_by,
+                                    'updated_by' => $data->updated_by
+                                ])) {
+                                return false;
+                            }
+
+                            return true;
+                        },
+                    ],
                 ]
             ],
             'pager' => [

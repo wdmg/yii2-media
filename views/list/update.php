@@ -18,22 +18,26 @@ $this->params['breadcrumbs'][] = ['label' => Yii::t('app/modules/media', 'Media 
 $this->params['breadcrumbs'][] = Yii::t('app/modules/media', 'Edit');
 
 ?>
-<div class="page-header">
-    <h1><?= Html::encode($this->title) ?> <small class="text-muted pull-right">[v.<?= $this->context->module->version ?>]</small></h1>
-</div>
-<div class="media-update">
-    <div class="media-form">
-        <?php $form = ActiveForm::begin([
-            'id' => "updateMediaForm",
-            'enableAjaxValidation' => true,
-            'options' => [
-                'enctype' => 'multipart/form-data'
-            ]
-        ]); ?>
+<?php if (Yii::$app->authManager && $this->context->module->moduleExist('rbac') && Yii::$app->user->can('updatePosts', [
+        'created_by' => $model->created_by,
+        'updated_by' => $model->updated_by
+    ])) : ?>
+    <div class="page-header">
+        <h1><?= Html::encode($this->title) ?> <small class="text-muted pull-right">[v.<?= $this->context->module->version ?>]</small></h1>
+    </div>
+    <div class="media-update">
+        <div class="media-form">
+            <?php $form = ActiveForm::begin([
+                'id' => "updateMediaForm",
+                'enableAjaxValidation' => true,
+                'options' => [
+                    'enctype' => 'multipart/form-data'
+                ]
+            ]); ?>
 
-        <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
+            <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
-        <?php
+            <?php
             $output = '';
             if (($mediaURL = $model->getMediaUrl(true, true)) && $model->id) {
                 $output = Html::a($model->getMediaUrl(true, false), $mediaURL, [
@@ -45,39 +49,38 @@ $this->params['breadcrumbs'][] = Yii::t('app/modules/media', 'Edit');
             if (!empty($output))
                 echo Html::tag('label', Yii::t('app/modules/media', 'Media URL')) . Html::tag('fieldset', $output) . '<br/>';
 
-        ?>
+            ?>
 
-        <?= $form->field($model, 'alias')->textInput(['maxlength' => true]) ?>
+            <?= $form->field($model, 'alias')->textInput(['maxlength' => true]) ?>
 
-        <?= $form->field($model, 'title')->textInput() ?>
-        <?= $form->field($model, 'caption')->textInput() ?>
-        <?= $form->field($model, 'alt')->textInput() ?>
-        <?= $form->field($model, 'description')->textarea(['rows' => 3]) ?>
+            <?= $form->field($model, 'title')->textInput() ?>
+            <?= $form->field($model, 'caption')->textInput() ?>
+            <?= $form->field($model, 'alt')->textInput() ?>
+            <?= $form->field($model, 'description')->textarea(['rows' => 3]) ?>
 
-        <?= $form->field($model, 'cat_id')->widget(SelectInput::class, [
-            'items' => $model->getAllCategoriesList(false),
-            'options' => [
-                'class' => 'form-control'
-            ]
-        ])->label(Yii::t('app/modules/media', 'Category')); ?>
+            <?= $form->field($model, 'cat_id')->widget(SelectInput::class, [
+                'items' => $model->getAllCategoriesList(false),
+                'options' => [
+                    'class' => 'form-control'
+                ]
+            ])->label(Yii::t('app/modules/media', 'Category')); ?>
 
-        <?= $form->field($model, 'status')->widget(SelectInput::class, [
-            'items' => $model->getStatusesList(),
-            'options' => [
-                'class' => 'form-control'
-            ]
-        ]); ?>
+            <?= $form->field($model, 'status')->widget(SelectInput::class, [
+                'items' => $model->getStatusesList(),
+                'options' => [
+                    'class' => 'form-control'
+                ]
+            ]); ?>
 
-        <hr/>
-        <div class="form-group">
-            <?= Html::a(Yii::t('app/modules/media', '&larr; Back to list'), ['list/index'], ['class' => 'btn btn-default pull-left']) ?>&nbsp;
-            <?= Html::submitButton(Yii::t('app/modules/media', 'Save'), ['class' => 'btn btn-success pull-right']) ?>
+            <hr/>
+            <div class="form-group">
+                <?= Html::a(Yii::t('app/modules/media', '&larr; Back to list'), ['list/index'], ['class' => 'btn btn-default pull-left']) ?>&nbsp;
+                <?= Html::submitButton(Yii::t('app/modules/media', 'Save'), ['class' => 'btn btn-success pull-right']) ?>
+            </div>
+            <?php ActiveForm::end(); ?>
         </div>
-        <?php ActiveForm::end(); ?>
     </div>
-</div>
-
-<?php $this->registerJs(<<< JS
+    <?php $this->registerJs(<<< JS
 $(document).ready(function() {
     function afterValidateAttribute(event, attribute, messages)
     {
@@ -103,4 +106,16 @@ $(document).ready(function() {
     $("#updateMediaForm").on("afterValidateAttribute", afterValidateAttribute);
 });
 JS
-); ?>
+    ); ?>
+<?php else : ?>
+    <div class="page-header">
+        <h1 class="text-danger"><?= Yii::t('app/modules/media', 'Error {code}. Access Denied', [
+                'code' => 403
+            ]) ?> <small class="text-muted pull-right">[v.<?= $this->context->module->version ?>]</small></h1>
+    </div>
+    <div class="media-update-error">
+        <blockquote>
+            <?= Yii::t('app/modules/media', 'You are not allowed to view this page.'); ?>
+        </blockquote>
+    </div>
+<?php endif; ?>

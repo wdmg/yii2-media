@@ -124,4 +124,8 @@ return [
     'No media items available' => "Нет доступных для отображения медиа элементов",
     'An error occurred while retrieving the posts list' => "Произошла ошибка при получении списка публикаций",
 
+    'Error {code}. Access Denied' => 'Ошибка {code}. Доступ не разрешен',
+    'You are not allowed to view this page.' => 'Вам не разрешено просматривать эту страницу.',
+
+
 ];

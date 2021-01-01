@@ -103,6 +103,11 @@ $this->params['breadcrumbs'][] = $this->title;
     <hr/>
     <div class="form-group">
         <?= Html::a(Yii::t('app/modules/media', '&larr; Back to list'), ['cats/index'], ['class' => 'btn btn-default pull-left']) ?>&nbsp;
-        <?= Html::a(Yii::t('app/modules/media', 'Update'), ['cats/update', 'id' => $model->id], ['class' => 'btn btn-primary pull-right']) ?>
+        <?php if (Yii::$app->authManager && $this->context->module->moduleExist('rbac') && Yii::$app->user->can('updatePosts', [
+                'created_by' => $model->created_by,
+                'updated_by' => $model->updated_by
+            ])) : ?>
+            <?= Html::a(Yii::t('app/modules/media', 'Update'), ['cats/update', 'id' => $model->id], ['class' => 'btn btn-primary pull-right']) ?>
+        <?php endif; ?>
     </div>
 </div>
