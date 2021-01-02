@@ -22,6 +22,14 @@ $this->params['breadcrumbs'][] = $this->title;
         <?php Pjax::begin([
             'id' => "pageContainer"
         ]); ?>
+        <?php
+            $visibleSerial = true;
+            if (Yii::$app->authManager && $this->context->module->moduleExist('rbac') && !Yii::$app->user->can('updatePosts', [
+                'created_by' => $model->created_by,
+                'updated_by' => $model->updated_by
+            ]))
+                $visibleSerial = false;
+        ?>
         <?= GridView::widget([
             'id' => "mediaList",
             'dataProvider' => $dataProvider,
@@ -35,7 +43,8 @@ $this->params['breadcrumbs'][] = $this->title;
                         return [
                             'value' => $model->id
                         ];
-                    }
+                    },
+                    'visible' => $visibleSerial,
                 ],
 
                 [
@@ -232,8 +241,8 @@ $this->params['breadcrumbs'][] = $this->title;
                     'visibleButtons' => [
                         'update' => function ($model) {
                             if (Yii::$app->authManager && $this->context->module->moduleExist('rbac') && !Yii::$app->user->can('updatePosts', [
-                                    'created_by' => $data->created_by,
-                                    'updated_by' => $data->updated_by
+                                    'created_by' => $model->created_by,
+                                    'updated_by' => $model->updated_by
                                 ])) {
                                 return false;
                             }
@@ -242,8 +251,8 @@ $this->params['breadcrumbs'][] = $this->title;
                         },
                         'delete' => function ($model) {
                             if (Yii::$app->authManager && $this->context->module->moduleExist('rbac') && !Yii::$app->user->can('updatePosts', [
-                                    'created_by' => $data->created_by,
-                                    'updated_by' => $data->updated_by
+                                    'created_by' => $model->created_by,
+                                    'updated_by' => $model->updated_by
                                 ])) {
                                 return false;
                             }
@@ -271,7 +280,8 @@ $this->params['breadcrumbs'][] = $this->title;
         ]); ?>
         <hr/>
         <div>
-            <div class="btn-group">
+            <?php if ($visibleSerial) : ?>
+                <div class="btn-group">
                 <?= Html::button(Yii::t('app/modules/media', 'Select action') . ' <span class="caret"></span>', [
                     'id' => 'batchSelectAction',
                     'class' => 'btn btn-default dropdown-toggle',
@@ -332,6 +342,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     </li>
                 </ul>
             </div>
+            <?php endif; ?>
             <?= Html::a(Yii::t('app/modules/media', 'Add new media'), ['list/upload'], [
                 'class' => 'btn btn-success pull-right',
                 'data-toggle' => 'modal',

@@ -123,8 +123,8 @@ $this->params['breadcrumbs'][] = Yii::t('app/modules/media', 'All categories');
                 'visibleButtons' => [
                     'update' => function ($model) {
                         if (Yii::$app->authManager && $this->context->module->moduleExist('rbac') && !Yii::$app->user->can('updatePosts', [
-                                'created_by' => $data->created_by,
-                                'updated_by' => $data->updated_by
+                                'created_by' => $model->created_by,
+                                'updated_by' => $model->updated_by
                             ])) {
                             return false;
                         }
@@ -133,12 +133,12 @@ $this->params['breadcrumbs'][] = Yii::t('app/modules/media', 'All categories');
                     },
                     'delete' => function ($model) {
                         // Category for uncategorized posts has undeleted
-                        if ($data->id === $data::DEFAULT_CATEGORY_ID) {
+                        if ($model->id === $model::DEFAULT_CATEGORY_ID) {
                             return false;
                         } else {
                             if (Yii::$app->authManager && $this->context->module->moduleExist('rbac') && !Yii::$app->user->can('updatePosts', [
-                                    'created_by' => $data->created_by,
-                                    'updated_by' => $data->updated_by
+                                    'created_by' => $model->created_by,
+                                    'updated_by' => $model->updated_by
                                 ])) {
                                 return false;
                             }

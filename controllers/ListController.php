@@ -68,7 +68,7 @@ class ListController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['update', 'create'],
+                        'actions' => ['update', 'create', 'delete', 'batch'],
                         'roles' => ['updatePosts'],
                         'allow' => true
                     ], [
