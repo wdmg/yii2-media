@@ -6,14 +6,15 @@ namespace wdmg\media;
  * Yii2 Media library
  *
  * @category        Module
- * @version         1.0.6
+ * @version         2.0.0
  * @author          Alexsander Vyshnyvetskyy <alex.vyshnyvetskyy@gmail.com>
  * @link            https://github.com/wdmg/yii2-media
- * @copyright       Copyright (c) 2019 - 2021 W.D.M.Group, Ukraine
+ * @copyright       Copyright (c) 2019 - 2023 W.D.M.Group, Ukraine
  * @license         https://opensource.org/licenses/MIT Massachusetts Institute of Technology (MIT) License
  *
  */
 
+use wdmg\helpers\ArrayHelper;
 use wdmg\helpers\StringHelper;
 use Yii;
 use wdmg\base\BaseModule;
@@ -46,7 +47,7 @@ class Module extends BaseModule
     /**
      * @var string the module version
      */
-    private $version = "1.0.6";
+    private $version = "2.0.0";
 
     /**
      * @var string the default routes to render media item (use "/" - for root)
@@ -400,7 +401,7 @@ class Module extends BaseModule
     /**
      * {@inheritdoc}
      */
-    public function dashboardNavItems($options = false)
+    public function dashboardNavItems($options = null)
     {
         $items = [
             'label' => $this->name,
@@ -420,7 +421,20 @@ class Module extends BaseModule
                 ]
             ]
         ];
-        return $items;
+
+	    if (!is_null($options)) {
+
+		    if (isset($options['count'])) {
+			    $items['label'] .= '<span class="badge badge-default float-right">' . $options['count'] . '</span>';
+			    unset($options['count']);
+		    }
+
+		    if (is_array($options))
+			    $items = ArrayHelper::merge($items, $options);
+
+	    }
+
+	    return $items;
     }
 
     public function getAllowedMime($asArray = true)

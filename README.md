@@ -11,7 +11,7 @@ Media library for Yii2 with media categories and drag'n'drop uploader.
 
 This module is an integral part of the [Butterfly.СMS](https://butterflycms.com/) content management system, but can also be used as an standalone extension.
 
-Copyrights (c) 2019-2021 [W.D.M.Group, Ukraine](https://wdmg.com.ua/)
+Copyrights (c) 2019-2023 [W.D.M.Group, Ukraine](https://wdmg.com.ua/)
 
 # Requirements 
 * PHP 5.6 or higher
@@ -85,11 +85,6 @@ Use the `Module::dashboardNavItems()` method of the module to generate a navigat
     ?>
 
 # Status and version [ready to use]
+* v.2.0.0 - Some fix, update copyrights
 * v.1.0.6 - RBAC implementation, read EXIF
 * v.1.0.5 - Update README.md
-* v.1.0.4 - Added drag-n-drop for upload
-* v.1.0.3 - Log activity
-* v.1.0.2 - Added pagination, up to date dependencies
-* v.1.0.1 - Check file not exists or generate unique filename
-* v.1.0.0 - CRUD for media items/categories, translations
-* v.0.0.3 - Upload functionality, mime types validator and preview thumbnails

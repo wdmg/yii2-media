@@ -1,6 +1,9 @@
 Changelog
 =========
 
+## 2.0.0 (2023-06-25)
+ * Some fix, update copyrights
+
 ## 1.0.6 (2021-01-02)
  * RBAC implementation
  * Read EXIF data
