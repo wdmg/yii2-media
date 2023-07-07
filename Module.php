@@ -6,7 +6,7 @@ namespace wdmg\media;
  * Yii2 Media library
  *
  * @category        Module
- * @version         2.0.0
+ * @version         2.0.1
  * @author          Alexsander Vyshnyvetskyy <alex.vyshnyvetskyy@gmail.com>
  * @link            https://github.com/wdmg/yii2-media
  * @copyright       Copyright (c) 2019 - 2023 W.D.M.Group, Ukraine
@@ -47,7 +47,7 @@ class Module extends BaseModule
     /**
      * @var string the module version
      */
-    private $version = "2.0.0";
+    private $version = "2.0.1";
 
     /**
      * @var string the default routes to render media item (use "/" - for root)

@@ -85,6 +85,7 @@ Use the `Module::dashboardNavItems()` method of the module to generate a navigat
     ?>
 
 # Status and version [ready to use]
+* v.2.0.1 - Update dependencies
 * v.2.0.0 - Some fix, update copyrights
 * v.1.0.6 - RBAC implementation, read EXIF
 * v.1.0.5 - Update README.md

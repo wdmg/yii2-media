@@ -1,6 +1,9 @@
 Changelog
 =========
 
+## 2.0.1 (2023-07-07)
+ * Update dependencies
+
 ## 2.0.0 (2023-06-25)
  * Some fix, update copyrights
 

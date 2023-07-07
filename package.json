@@ -1,6 +1,6 @@
 {
   "name": "yii2-media",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Assets package for media library extension",
   "main": "Gruntfile.js",
   "scripts": {
